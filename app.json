@@ -11,7 +11,9 @@
       "resizeMode": "cover",
       "backgroundColor": "#fff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.revamprovers.tootle",
@@ -26,7 +28,9 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.revamprovers.tootle",
-      "permissions": ["android.permission.CAMERA"]
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "plugins": [
       "./plugins/withAndroidVerifiedLinksWorkaround",
@@ -41,6 +45,14 @@
     ],
     "runtimeVersion": {
       "policy": "sdkVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "596e4cc4-efb5-4fdb-bab8-e4a34876cc93"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/596e4cc4-efb5-4fdb-bab8-e4a34876cc93"
     }
   }
 }
