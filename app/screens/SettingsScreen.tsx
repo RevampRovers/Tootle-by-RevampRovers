@@ -123,7 +123,7 @@ export default function SettingsScreen({
               {
                 dropdown: false,
                 title: "Version",
-                subTitle: "1.0.0",
+                subTitle: "1.0.1",
               },
             ],
           },
