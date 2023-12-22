@@ -1,4 +1,4 @@
-import { TouchableHighlight } from "react-native";
+import { TouchableHighlight, TouchableOpacity } from "react-native";
 
 import colors from "../config/colors";
 import AppText from "./AppText";
@@ -25,8 +25,7 @@ export default function AppButton({
   disabled = false,
 }: AppButtonProps) {
   return (
-    <TouchableHighlight
-      underlayColor={underlayColor}
+    <TouchableOpacity
       className={`${color} my-2 h-12 items-center justify-center rounded-xl ${className} ${
         disabled ? "opacity-50" : ""
       }`}
@@ -38,6 +37,6 @@ export default function AppButton({
       >
         {title}
       </AppText>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 }

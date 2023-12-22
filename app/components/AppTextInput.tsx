@@ -1,49 +1,89 @@
+import { ReactNode } from "react";
 import {
-  View,
   TextInput,
   TextInputProps,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { ReactNode } from "react";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
-import colors from "../config/colors";
 import defaultStyles from "../config/styles";
 import AppText from "./AppText";
+import colors from "../config/colors";
 
 export interface MainInputProps extends TextInputProps {
   icon?: string;
   my0?: boolean;
   children?: ReactNode;
   onPress?: () => void;
+  materialIcons?: boolean;
+  passwordField?: boolean;
+  setSecureTextEntry?: (value: boolean) => void;
+  textClassName?: string;
+  noBorder?: boolean;
 }
 
 export interface AppTextInputProps extends MainInputProps {
-  label: string;
+  label?: string;
 }
 
-function MainInput({ icon, my0, children, ...otherProps }: MainInputProps) {
+function MainInput({
+  icon,
+  my0,
+  children,
+  passwordField,
+  textClassName = "flex-1 p-3 px-4 bg-white",
+  noBorder,
+  materialIcons,
+  ...otherProps
+}: MainInputProps) {
   return (
     <View
-      className={`w-full flex-row items-center justify-center rounded-xl border-2 border-light ${
+      className={`${
+        noBorder ? "" : "border-primary border-2"
+      } flex-row items-center justify-center overflow-hidden rounded-xl ${
         my0 ? "my-0" : "my-2"
       }`}
     >
       {icon && (
-        <MaterialCommunityIcons
-          color={colors.mediumGray}
-          name={icon as any}
-          size={20}
-          className="mr-2"
-        />
+        <View className="ml-4">
+          {materialIcons ? (
+            <MaterialIcons
+              color={colors.primary}
+              name={icon as any}
+              size={20}
+            />
+          ) : (
+            <MaterialCommunityIcons
+              color={colors.primary}
+              name={icon as any}
+              size={20}
+            />
+          )}
+        </View>
       )}
       {children || (
         <TextInput
           placeholderTextColor={colors.mediumGray}
           style={[defaultStyles.text]}
-          className="flex-1 p-3 px-4"
+          className={textClassName}
           {...otherProps}
         />
+      )}
+
+      {passwordField && (
+        <TouchableOpacity
+          onPress={() => {
+            otherProps.setSecureTextEntry?.(!otherProps.secureTextEntry);
+          }}
+          className="mx-2"
+        >
+          <MaterialCommunityIcons
+            color={colors.mediumGray}
+            name={otherProps.secureTextEntry ? "eye-off" : "eye"}
+            size={20}
+          />
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -54,21 +94,22 @@ export default function AppTextInput({
   onPress,
   my0,
   children,
+  style,
   ...otherProps
 }: AppTextInputProps) {
   return (
-    <View>
+    <View style={style}>
       {label ? (
-        <AppText className="mx-3 mt-2 text-sm text-mediumGray">{label}</AppText>
+        <AppText className="text-mediumGray mx-3 mt-2 text-sm">{label}</AppText>
       ) : null}
       {onPress ? (
         <TouchableOpacity onPress={onPress}>
-          <MainInput my0={my0} {...otherProps}>
+          <MainInput my0={my0} accessibilityLabel={label} {...otherProps}>
             {children}
           </MainInput>
         </TouchableOpacity>
       ) : (
-        <MainInput my0={my0} {...otherProps}>
+        <MainInput my0={my0} accessibilityLabel={label} {...otherProps}>
           {children}
         </MainInput>
       )}
