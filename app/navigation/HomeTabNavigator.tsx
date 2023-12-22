@@ -42,6 +42,7 @@ export default function HomeTabNavigator() {
         component={HomeScreen}
         name={routes.HOME}
         options={{
+          headerShown: false,
           tabBarIcon: tabToolsIcon,
         }}
       />

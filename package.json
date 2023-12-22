@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/config-plugins": "~7.2.5",
+    "@gorhom/bottom-sheet": "^4.5.1",
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-native-community/datetimepicker": "7.2.0",
     "@react-native-community/hooks": "^3.0.0",
@@ -48,6 +49,7 @@
     "react-native-expo-image-cache": "^4.1.0",
     "react-native-gesture-handler": "~2.12.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-maps": "1.7.1",
     "react-native-picker-select": "^8.1.0",
     "react-native-progress": "^5.0.0",
     "react-native-reanimated": "~3.3.0",
