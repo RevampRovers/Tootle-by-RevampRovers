@@ -12,4 +12,5 @@ export default {
   secondary: "#4ecdc4",
   white: "#fff",
   iosBackground: "#f2f2f6",
+  green: "green"
 };
