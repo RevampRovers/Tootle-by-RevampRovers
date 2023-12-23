@@ -6,6 +6,7 @@ import routes from "./routes";
 import defaultStyles from "../config/styles";
 import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
+import HistoryScreen from "../screens/HistoryScreen";
 import colors from "../config/colors";
 // import TutorialsScreen from "../screens/TutorialsScreen";
 // import NotificationsScreen from "../screens/NotificationsScreen";
@@ -13,6 +14,8 @@ import colors from "../config/colors";
 export type HomeTabNavigatorParamList = {
   [routes.HOME]: undefined;
   [routes.SETTINGS]: undefined;
+  [routes.HISTORY]: undefined;
+
 };
 
 interface TabIconProps {
@@ -26,7 +29,9 @@ const tabToolsIcon = ({ color, size }: TabIconProps) => (
 const tabSettingsIcon = ({ color, size }: TabIconProps) => (
   <Ionicons name="md-settings-sharp" size={size} color={color} />
 );
-
+const tabHistory = ({ color, size }: TabIconProps) => (
+  <MaterialCommunityIcons color={color} name="history" size={size} />
+);
 export default function HomeTabNavigator() {
   const Tab = createBottomTabNavigator<HomeTabNavigatorParamList>();
 
@@ -46,6 +51,14 @@ export default function HomeTabNavigator() {
           tabBarIcon: tabToolsIcon,
         }}
       />
+        <Tab.Screen
+        component={HistoryScreen}
+        name={routes.HISTORY}
+        options={{
+          title: "History",
+          tabBarIcon: tabHistory,
+        }}
+      />
       <Tab.Screen
         component={SettingsScreen}
         name={routes.SETTINGS}
@@ -54,6 +67,7 @@ export default function HomeTabNavigator() {
           tabBarIcon: tabSettingsIcon,
         }}
       />
+    
     </Tab.Navigator>
   );
 }

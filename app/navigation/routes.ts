@@ -9,6 +9,7 @@ enum routes {
   SHARE_APP = "ShareAppScreen",
   QR_SCANNER = "QRScanner",
   QR_INFO = "QRInfo",
+  HISTORY = "history"
 }
 
 export default routes;
