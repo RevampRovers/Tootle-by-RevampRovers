@@ -8,6 +8,7 @@ import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import colors from "../config/colors";
+import History2Screen from "../screens/History2Screen";
 // import TutorialsScreen from "../screens/TutorialsScreen";
 // import NotificationsScreen from "../screens/NotificationsScreen";
 
@@ -15,7 +16,7 @@ export type HomeTabNavigatorParamList = {
   [routes.HOME]: undefined;
   [routes.SETTINGS]: undefined;
   [routes.HISTORY]: undefined;
-
+  [routes.HISTORY_2]: undefined;
 };
 
 interface TabIconProps {
@@ -51,11 +52,19 @@ export default function HomeTabNavigator() {
           tabBarIcon: tabToolsIcon,
         }}
       />
-        <Tab.Screen
+      <Tab.Screen
         component={HistoryScreen}
         name={routes.HISTORY}
         options={{
           title: "History",
+          tabBarIcon: tabHistory,
+        }}
+      />
+      <Tab.Screen
+        component={History2Screen}
+        name={routes.HISTORY_2}
+        options={{
+          title: "History2",
           tabBarIcon: tabHistory,
         }}
       />
@@ -67,7 +76,6 @@ export default function HomeTabNavigator() {
           tabBarIcon: tabSettingsIcon,
         }}
       />
-    
     </Tab.Navigator>
   );
 }

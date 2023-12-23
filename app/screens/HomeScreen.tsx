@@ -94,9 +94,9 @@ export default function HomeScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => [340], []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
+  // const handleSheetChanges = useCallback((index: number) => {
+  //   console.log("handleSheetChanges", index);
+  // }, []);
 
   return (
     <Screen
@@ -105,28 +105,6 @@ export default function HomeScreen() {
       scrollRef={scrollRef}
       className="flex-1"
     >
-      {/* <AppText bigText className="my-5 font-bold">
-        Book Ride
-      </AppText>
-      <View className="flex-row flex-wrap justify-between">
-        {[
-          {
-            name: "Button",
-            onPress: () => {
-              Alert.alert("Button pressed");
-            },
-            iconName: "car",
-          },
-        ].map(({ name, onPress, iconName }) => (
-          <SquareItem
-            key={name}
-            name={name}
-            onPress={onPress}
-            iconName={iconName}
-          />
-        ))}
-      </View> */}
-
       <View
         style={{
           flex: 1,
@@ -185,7 +163,7 @@ export default function HomeScreen() {
           index={0}
           animateOnMount={true}
           snapPoints={snapPoints}
-          onChange={handleSheetChanges}
+          // onChange={handleSheetChanges}
         >
           <View className="m-3 flex-row justify-center rounded-xl bg-light p-2">
             {Object.values(ServiceType).map((type) => (
