@@ -43,10 +43,10 @@ function MainInput({
         noBorder ? "" : "border-primary border-2"
       } flex-row items-center justify-center overflow-hidden rounded-xl ${
         my0 ? "my-0" : "my-2"
-      }`}
+      } ${otherProps.clearButtonMode ? "pr-2" : ""}`}
     >
       {icon && (
-        <View className="ml-4">
+        <View className="ml-3">
           {materialIcons ? (
             <MaterialIcons
               color={colors.primary}
@@ -66,7 +66,7 @@ function MainInput({
         <TextInput
           placeholderTextColor={colors.mediumGray}
           style={[defaultStyles.text]}
-          className={textClassName}
+          className={`${textClassName} ${icon ? "px-3" : ""}`}
           {...otherProps}
         />
       )}

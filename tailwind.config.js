@@ -12,6 +12,8 @@ const colors = {
   secondary: "#4ecdc4",
   white: "#fff",
   iosBackground: "#f2f2f6",
+  green: "green",
+  yellow: "#FBC02D",
 };
 
 /** @type {import('tailwindcss').Config} */

@@ -7,21 +7,23 @@ import { animation } from "../config/animation";
 import HomeTabNavigator, {
   HomeTabNavigatorParamList,
 } from "./HomeTabNavigator";
+import ChatScreen from "../screens/ChatScreen";
 // import NotificationsScreen from "../screens/NotificationsScreen";
 
 type HomeTabParamList = {
   [routes.HOME_TAB]: undefined;
+  [routes.HOME]: undefined;
 };
 
-type ToolsParamList = {
-  [routes.HOME]: undefined;
+type MultiScreenParamList = {
+  [routes.CHAT]: undefined;
 };
 
 type MultipleScreensParamList = {};
 
 export type AppNavigatorParamList = HomeTabParamList &
   HomeTabNavigatorParamList &
-  ToolsParamList &
+  MultiScreenParamList &
   MultipleScreensParamList;
 
 export default function AppNavigator() {
@@ -43,6 +45,14 @@ export default function AppNavigator() {
       {/* Tools End */}
 
       {/* Multiple Screens */}
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerBackTitle: "Back",
+        }}
+        component={ChatScreen}
+        name={routes.CHAT}
+      />
       {/* Multiple Screens End */}
     </Stack.Navigator>
   );
