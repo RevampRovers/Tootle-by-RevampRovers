@@ -45,6 +45,8 @@ export default function HomeScreen() {
     useState(false);
   const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.BIKE);
 
+  const [mapTouched, setMapTouched] = useState(false);
+
   const [pickupLocation, setPickupLocation] = useState<string>("");
   const [pickupLocationInput, setPickupLocationInput] = useState<string>("");
   const [destinationLocation, setDestinationLocation] = useState<string>("");
@@ -52,14 +54,28 @@ export default function HomeScreen() {
     useState<string>("");
 
   useEffect(() => {
-    if (!pickupLocationModelVisible) {
-      setPickupLocationInput("");
+    if (pickupLocationModelVisible) {
+      setPickupLocationInput(pickupLocation);
     }
   }, [pickupLocationModelVisible]);
 
   useEffect(() => {
-    if (!destinationLocationModelVisible) {
-      setDestinationLocationInput("");
+    let timeout: NodeJS.Timeout;
+    if (mapTouched) {
+      bottomSheetRef.current?.snapToPosition(0);
+    } else {
+      timeout = setTimeout(() => {
+        bottomSheetRef.current?.snapToIndex(0);
+      }, 250);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [mapTouched]);
+
+  useEffect(() => {
+    if (destinationLocationModelVisible) {
+      setDestinationLocationInput(destinationLocation);
     }
   }, [destinationLocationModelVisible]);
 
@@ -117,19 +133,15 @@ export default function HomeScreen() {
         }}
       >
         <MapView
-          // onPanDrag={() => {
-          //   console.log("drag");
-          // }}
           onTouchStart={() => {
-            bottomSheetRef.current?.snapToPosition(0);
+            setMapTouched(true);
           }}
           onTouchEnd={() => {
-            bottomSheetRef.current?.snapToIndex(0);
+            setMapTouched(false);
           }}
           ref={mapRef}
           mapPadding={{ top: 0, right: 0, bottom: 340, left: 0 }}
           style={{
-            // position: "absolute",
             width: "100%",
             height: "100%",
           }}

@@ -46,7 +46,7 @@ function MainInput({
       }`}
     >
       {icon && (
-        <View className="ml-4">
+        <View className="ml-3">
           {materialIcons ? (
             <MaterialIcons
               color={colors.primary}
@@ -66,7 +66,7 @@ function MainInput({
         <TextInput
           placeholderTextColor={colors.mediumGray}
           style={[defaultStyles.text]}
-          className={textClassName}
+          className={`${textClassName} ${icon ? "px-3" : ""}`}
           {...otherProps}
         />
       )}
