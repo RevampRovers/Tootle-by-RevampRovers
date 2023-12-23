@@ -38,7 +38,11 @@ export default function ActivityIndicator({ visible }: ActivityIndicatorProps) {
 
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
-      <SpinningIndicator size={48} className="flex-1" color={colors.primary} />
+      <SpinningIndicator
+        size="large"
+        className="flex-1"
+        color={colors.primary}
+      />
     </Animated.View>
   );
 }

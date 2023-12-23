@@ -4,6 +4,7 @@ enum routes {
   SETTINGS = "Settings",
   HISTORY = "history",
   HISTORY_2 = "history2",
+  CHAT = "Chat",
 }
 
 export default routes;
