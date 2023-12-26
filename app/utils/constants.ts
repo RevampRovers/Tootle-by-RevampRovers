@@ -6,7 +6,12 @@ export type Place = {
   longitude: number;
 };
 
-export const promos = [
+export type Promo = {
+  color: string;
+  code: string;
+};
+
+export const offers: Promo[] = [
   {
     color: "#c93a3a",
     code: "YUSH15",

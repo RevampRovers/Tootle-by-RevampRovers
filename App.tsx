@@ -10,6 +10,7 @@ import { navigationRef } from "./app/navigation/routeNavigation";
 import navigationTheme from "./app/navigation/navigationTheme";
 import AppProgress from "./app/components/AppProgress";
 import AppNavigator from "./app/navigation/AppNavigator";
+import OffersBottomSheet from "./app/components/OffersBottomSheet";
 
 LogBox.ignoreLogs(["Could not find image"]);
 
@@ -45,6 +46,7 @@ export default function App() {
       <NavigationContainer theme={navigationTheme} ref={navigationRef}>
         <GestureHandlerRootView className="flex-1 bg-white">
           <AppNavigator />
+          <OffersBottomSheet />
         </GestureHandlerRootView>
       </NavigationContainer>
     </>

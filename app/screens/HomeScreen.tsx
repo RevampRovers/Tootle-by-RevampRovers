@@ -6,20 +6,14 @@ import {
   Keyboard,
   Modal,
   RefreshControl,
-  ScrollView,
   TouchableHighlight,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { useEffect, useState } from "react";
 import MapView, { MapMarker, Polyline } from "react-native-maps";
 import React, { useCallback, useMemo, useRef } from "react";
-import { Text, StyleSheet } from "react-native";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetTextInput,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Linking } from "react-native";
 import Screen from "../components/Screen";
@@ -38,7 +32,10 @@ import useDebounce from "../utils/useDebounce";
 import CancelModal, {
   ButtomSheetState,
 } from "../components/cancel/CancelModal";
-import { Place, leapfrogToSxcRoute, places } from "../utils/constants";
+import { Place, leapfrogToSxcRoute, offers, places } from "../utils/constants";
+import { RouteProp } from "@react-navigation/native";
+import { AppNavigatorParamList } from "../navigation/AppNavigator";
+import { HomeTabNavigatorParamList } from "../navigation/HomeTabNavigator";
 
 enum ServiceType {
   BIKE = "BIKE",
@@ -57,8 +54,13 @@ const imageMap = {
   [ServiceType.DELIVERY]: require("../assets/delivery.png"),
 };
 
-export default function HomeScreen() {
-  const scrollRef = useRef<KeyboardAwareScrollView>(null);
+export default function HomeScreen({
+  route,
+}: {
+  route: RouteProp<HomeTabNavigatorParamList, routes.HOME>;
+}) {
+  const { promo } = route.params || {};
+
   const mapRef = useRef<MapView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const bottomSheetTextInputRef = useRef<BottomSheet>(null);
@@ -92,6 +94,12 @@ export default function HomeScreen() {
   const [buttomSheetState, setButtomSheetState] = useState<ButtomSheetState>(
     ButtomSheetState.LOCATION_PICKER
   );
+
+  useEffect(() => {
+    if (promo) {
+      setPromoInput(promo.code);
+    }
+  }, [promo]);
 
   useDebounce(
     () => {
@@ -198,10 +206,6 @@ export default function HomeScreen() {
     }
   }, [pickupLocation, destinationLocation]);
 
-  // const handleSheetChanges = useCallback((index: number) => {
-  //   console.log("handleSheetChanges", index);
-  // }, []);
-
   const filteredPickupPlaces = useMemo(() => {
     return places.filter((place) => {
       return (
@@ -225,12 +229,7 @@ export default function HomeScreen() {
   }, [destinationLocationInput]);
 
   return (
-    <Screen
-      noSafeArea
-      noKeyboardAwareScroll
-      scrollRef={scrollRef}
-      className="flex-1"
-    >
+    <Screen noSafeArea noKeyboardAwareScroll className="flex-1">
       <View className="flex-1">
         <MapView
           initialCamera={{
@@ -609,6 +608,15 @@ export default function HomeScreen() {
             index={0}
             onChange={(index: number) => {
               if (index === 0 || index === -1) {
+                if (promoInput && notePromo === NotePromoChoice.PROMO) {
+                  const offer = offers.find(
+                    (offer) => offer.code === promoInput
+                  )?.code;
+                  if (!offer) {
+                    Alert.alert("Invalid Promo Code");
+                    setPromoInput("");
+                  }
+                }
                 setNotePromo(null);
               }
             }}

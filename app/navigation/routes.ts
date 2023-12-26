@@ -3,9 +3,8 @@ enum routes {
   HOME = "Home",
   SETTINGS = "Settings",
   HISTORY = "History",
-  RIDE_CANCEL = "RideCancel",
-  HISTORY_2 = "History2",
   CHAT = "Chat",
+  OFFERS = "Offers",
 }
 
 export default routes;

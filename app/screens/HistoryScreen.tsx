@@ -63,7 +63,6 @@ export default function HistoryScreen() {
           </TouchableOpacity>
         ))}
       </View>
-
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={false} onRefresh={() => {}} />
