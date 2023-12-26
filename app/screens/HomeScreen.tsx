@@ -3,18 +3,23 @@ import {
   Alert,
   Button,
   Image,
+  Keyboard,
   Modal,
   RefreshControl,
   ScrollView,
   TouchableHighlight,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { useEffect, useState } from "react";
-import MapView, { MapMarker } from "react-native-maps";
+import MapView, { MapMarker, Polyline } from "react-native-maps";
 import React, { useCallback, useMemo, useRef } from "react";
 import { Text, StyleSheet } from "react-native";
-import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetTextInput,
+} from "@gorhom/bottom-sheet";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Linking } from "react-native";
 import Screen from "../components/Screen";
@@ -29,6 +34,7 @@ import NoPlacesFound from "../components/NoPlacesFound";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { navigate } from "../navigation/routeNavigation";
 import routes from "../navigation/routes";
+import useDebounce from "../utils/useDebounce";
 
 enum ServiceType {
   BIKE = "BIKE",
@@ -42,6 +48,11 @@ enum ButtomSheetState {
   RIDE_FOUND = "RIDE_FOUND",
 }
 
+enum NotePromoChoice {
+  NOTE = "NOTE",
+  PROMO = "PROMO",
+}
+
 const imageMap = {
   [ServiceType.BIKE]: require("../assets/bike.png"),
   [ServiceType.CAR]: require("../assets/car.png"),
@@ -52,14 +63,22 @@ export default function HomeScreen() {
   const scrollRef = useRef<KeyboardAwareScrollView>(null);
   const mapRef = useRef<MapView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetTextInputRef = useRef<BottomSheet>(null);
+  const [dragValue, setDragValue] = useState<number>(0);
 
+  const [notePromo, setNotePromo] = useState<NotePromoChoice | null>(null);
+  const [promoInput, setPromoInput] = useState<string>("");
+  const [noteInput, setNoteInput] = useState<string>("");
   const [pickupLocationModelVisible, setPickupLocationModelVisible] =
     useState(false);
   const [destinationLocationModelVisible, setDestinationLocationModelVisible] =
     useState(false);
   const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.BIKE);
   const [mapTouched, setMapTouched] = useState(false);
-  const [pickupLocation, setPickupLocation] = useState<Place | null>(null);
+  const [pickupLocation, setPickupLocation] = useState<Place | null>(
+    places.find((place) => place.id === 11) || null
+  );
+  const [ridePriceInput, setRidePriceInput] = useState<string>("200");
   const [pickupLocationInput, setPickupLocationInput] = useState<string>("");
   const [destinationLocation, setDestinationLocation] = useState<Place | null>(
     null
@@ -67,10 +86,20 @@ export default function HomeScreen() {
   const [destinationLocationInput, setDestinationLocationInput] =
     useState<string>("");
   const [artificalLoading, setArtificalLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"Cash" | "eSewa">("Cash");
+  const [paymentMethod, setPaymentMethod] = useState<
+    "Cash" | "Khalti" | "Business"
+  >("Cash");
 
   const [buttomSheetState, setButtomSheetState] = useState<ButtomSheetState>(
     ButtomSheetState.LOCATION_PICKER
+  );
+
+  useDebounce(
+    () => {
+      setMapTouched(false);
+    },
+    [dragValue],
+    200
   );
 
   const snapPoints = useMemo(
@@ -78,12 +107,21 @@ export default function HomeScreen() {
       buttomSheetState === ButtomSheetState.LOCATION_PICKER
         ? [340]
         : buttomSheetState === ButtomSheetState.PAYMENT_METHOD
-        ? [280]
+        ? [400]
         : buttomSheetState === ButtomSheetState.RIDE_FOUND
         ? [320]
         : [0],
     [buttomSheetState]
   );
+  const snapPointsTextInput = [1, 200];
+
+  useEffect(() => {
+    if (notePromo) {
+      bottomSheetTextInputRef.current?.snapToIndex(1);
+    } else {
+      bottomSheetTextInputRef.current?.close();
+    }
+  }, [notePromo]);
 
   useEffect(() => {
     if (pickupLocationModelVisible) {
@@ -108,11 +146,12 @@ export default function HomeScreen() {
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     if (mapTouched) {
+      Keyboard.dismiss();
       bottomSheetRef.current?.snapToPosition(0);
     } else {
       timeout = setTimeout(() => {
         bottomSheetRef.current?.snapToIndex(0);
-      }, 250);
+      }, 0);
     }
     return () => {
       clearTimeout(timeout);
@@ -204,11 +243,9 @@ export default function HomeScreen() {
             heading: 0,
             pitch: 0,
           }}
-          onTouchStart={() => {
+          onPanDrag={() => {
             setMapTouched(true);
-          }}
-          onTouchEnd={() => {
-            setMapTouched(false);
+            setDragValue(Math.random());
           }}
           ref={mapRef}
           mapPadding={{ top: 0, right: 0, bottom: 340, left: 0 }}
@@ -227,7 +264,7 @@ export default function HomeScreen() {
                 latitude: pickupLocation.latitude,
                 longitude: pickupLocation.longitude,
               }}
-              pinColor="green"
+              pinColor={colors.primary}
             />
           )}
           {destinationLocation && (
@@ -238,9 +275,118 @@ export default function HomeScreen() {
               }}
             />
           )}
+          {pickupLocation?.id === 11 && destinationLocation?.id === 1 && (
+            <Polyline
+              coordinates={
+                [
+                  [85.327246, 27.707435],
+                  [85.327215, 27.707302],
+                  [85.327208, 27.707278],
+                  [85.327168, 27.707064],
+                  [85.327162, 27.70704],
+                  [85.327025, 27.706492],
+                  [85.326924, 27.706166],
+                  [85.326849, 27.705877],
+                  [85.326845, 27.705858],
+                  [85.326776, 27.705362],
+                  [85.326521, 27.705349],
+                  [85.326287, 27.705371],
+                  [85.326156, 27.705388],
+                  [85.325535, 27.705472],
+                  [85.325132, 27.705511],
+                  [85.32461, 27.705566],
+                  [85.324199, 27.705632],
+                  [85.324148, 27.705628],
+                  [85.324061, 27.705618],
+                  [85.323962, 27.705621],
+                  [85.32287, 27.705647],
+                  [85.322824, 27.705021],
+                  [85.322758, 27.704648],
+                  [85.322746, 27.704572],
+                  [85.322662, 27.703998],
+                  [85.322609, 27.703692],
+                  [85.322516, 27.703087],
+                  [85.322485, 27.70282],
+                  [85.322427, 27.702414],
+                  [85.322393, 27.70217],
+                  [85.322382, 27.702091],
+                  [85.32237, 27.702006],
+                  [85.322352, 27.701879],
+                  [85.322301, 27.701606],
+                  [85.322182, 27.700999],
+                  [85.322174, 27.700839],
+                  [85.322132, 27.700648],
+                  [85.322074, 27.700379],
+                  [85.321923, 27.699683],
+                  [85.32179, 27.699086],
+                  [85.321719, 27.698769],
+                  [85.32169, 27.69863],
+                  [85.321662, 27.69849],
+                  [85.321643, 27.698409],
+                  [85.321543, 27.69809],
+                  [85.321412, 27.69751],
+                  [85.3212, 27.696566],
+                  [85.321048, 27.695921],
+                  [85.320957, 27.695485],
+                  [85.320876, 27.695132],
+                  [85.320863, 27.695065],
+                  [85.320846, 27.69499],
+                  [85.320737, 27.694546],
+                  [85.320722, 27.6945],
+                  [85.320687, 27.694418],
+                  [85.320645, 27.694353],
+                  [85.320597, 27.694304],
+                  [85.320545, 27.694269],
+                  [85.320491, 27.694246],
+                  [85.320437, 27.694233],
+                  [85.320385, 27.694228],
+                  [85.320336, 27.694229],
+                  [85.320293, 27.694234],
+                  [85.320256, 27.694241],
+                  [85.320229, 27.694249],
+                  [85.320213, 27.694256],
+                  [85.31998, 27.694362],
+                  [85.31996, 27.69437],
+                  [85.319948, 27.694375],
+                  [85.319935, 27.694379],
+                  [85.319917, 27.694385],
+                  [85.319892, 27.694392],
+                  [85.319863, 27.694397],
+                  [85.319828, 27.6944],
+                  [85.319789, 27.694399],
+                  [85.319746, 27.694392],
+                  [85.319766, 27.69438],
+                  [85.319793, 27.694338],
+                  [85.319815, 27.694303],
+                  [85.319867, 27.694256],
+                  [85.319931, 27.694181],
+                  [85.320178, 27.69392],
+                  [85.320312, 27.693798],
+                  [85.320457, 27.693664],
+                  [85.320464, 27.693635],
+                  [85.320473, 27.693608],
+                  [85.320425, 27.69346],
+                  [85.320448, 27.693423],
+                  [85.320463, 27.693398],
+                  [85.320593, 27.693335],
+                  [85.320714, 27.693283],
+                  [85.320871, 27.693262],
+                  [85.320921, 27.693241],
+                ].map((coordinate) => ({
+                  latitude: coordinate[1],
+                  longitude: coordinate[0],
+                })) || []
+              }
+              strokeWidth={12}
+              strokeColor="#4595ff"
+            />
+          )}
         </MapView>
         <BottomSheet
+          keyboardBlurBehavior="restore"
+          // enableDynamicSizing
           keyboardBehavior="interactive"
+          enableHandlePanningGesture
           // overDragResistanceFactor={15}
           ref={bottomSheetRef}
           index={0}
@@ -322,7 +468,7 @@ export default function HomeScreen() {
                   title="Book Ride"
                   className="flex-1 bg-primary"
                   onPress={() => {
-                    if (!pickupLocation && !destinationLocation) {
+                    if (!pickupLocation || !destinationLocation) {
                       Alert.alert(
                         "Error",
                         "Please select pickup and drop location"
@@ -357,35 +503,59 @@ export default function HomeScreen() {
                 />
                 <AppText className="ml-2">{destinationLocation?.title}</AppText>
               </View>
+              <View className="flex-row gap-2">
+                <AppButton
+                  className="flex-1"
+                  title={`Note ${noteInput ? "✓" : ""}`}
+                  onPress={() => {
+                    setNotePromo(NotePromoChoice.NOTE);
+                  }}
+                />
+                <AppButton
+                  className="flex-1"
+                  title={`Promo ${promoInput ? "✓" : ""}`}
+                  onPress={() => {
+                    setNotePromo(NotePromoChoice.PROMO);
+                  }}
+                />
+              </View>
               <ListItemSeparator />
-              <View className="m-2 flex-row justify-between">
-                <AppText className="text-xl">Payment Method</AppText>
-                <AppText className="text-primary font-bold text-xl">
-                  Rs. 200
-                </AppText>
+              <View className="m-2 mb-0 flex-row justify-between">
+                <AppText className="text-xl">Payment</AppText>
               </View>
-              <View className="flex-row justify-center rounded-xl bg-light p-2">
-                {["Cash" as const, "eSewa" as const].map((type) => (
-                  <TouchableOpacity
-                    key={type}
-                    onPress={() => {
-                      setPaymentMethod(type);
-                    }}
-                    className={`${
-                      paymentMethod === type ? "bg-primary" : ""
-                    } rounded-lg p-2 px-4 flex-1 items-center justify-center`}
-                  >
-                    <AppText
-                      className={`${
-                        paymentMethod === type ? "text-white" : ""
-                      } rounded-lg`}
-                    >
-                      {type}
-                    </AppText>
-                  </TouchableOpacity>
-                ))}
-              </View>
+              <AppTextInput
+                onFocus={() => bottomSheetRef.current?.snapToPosition(660)}
+                onBlur={() => bottomSheetRef.current?.snapToIndex(0)}
+                placeholder="Offer your fair"
+                value={ridePriceInput}
+                onChangeText={(text) => {
+                  setRidePriceInput(text);
+                }}
+              />
 
+              <View className="mt-2 flex-row justify-center rounded-xl bg-light p-2">
+                {["Cash" as const, "Khalti" as const, "Business" as const].map(
+                  (type) => (
+                    <TouchableOpacity
+                      key={type}
+                      onPress={() => {
+                        setPaymentMethod(type);
+                      }}
+                      className={`${
+                        paymentMethod === type ? "bg-primary" : ""
+                      } rounded-lg p-2 px-4 flex-1 items-center justify-center`}
+                    >
+                      <AppText
+                        className={`${
+                          paymentMethod === type ? "text-white" : ""
+                        } rounded-lg`}
+                      >
+                        {type}
+                      </AppText>
+                    </TouchableOpacity>
+                  )
+                )}
+              </View>
               <View className="flex-row gap-3 mt-0">
                 <AppButton
                   title="Back"
@@ -460,7 +630,7 @@ export default function HomeScreen() {
               <View className="m-2 mb-1 flex-row justify-between">
                 <AppText className="text-xl">Payment Method</AppText>
                 <AppText className="text-primary font-bold text-xl">
-                  Rs. 200
+                  Rs. {ridePriceInput}
                 </AppText>
               </View>
               <AppText className="mb-2 text-primary font-bold mx-2 text-lg">
@@ -527,6 +697,84 @@ export default function HomeScreen() {
             </View>
           )}
         </BottomSheet>
+        {buttomSheetState === ButtomSheetState.PAYMENT_METHOD ? (
+          <BottomSheet
+            ref={bottomSheetTextInputRef}
+            index={0}
+            onChange={(index: number) => {
+              if (index === 0 || index === -1) {
+                setNotePromo(null);
+              }
+            }}
+            snapPoints={snapPointsTextInput}
+            enableDynamicSizing={false}
+            backdropComponent={(props) => {
+              return (
+                <BottomSheetBackdrop
+                  {...props}
+                  opacity={0.5}
+                  disappearsOnIndex={0}
+                  appearsOnIndex={1}
+                />
+              );
+            }}
+          >
+            <View className="px-5">
+              {notePromo === NotePromoChoice.NOTE ? (
+                <>
+                  <View className="m-2 mb-0 flex-row justify-between">
+                    <AppText className="text-xl">Add a Note</AppText>
+                  </View>
+                  <AppTextInput
+                    autoFocus
+                    onFocus={() =>
+                      bottomSheetTextInputRef.current?.snapToPosition(460)
+                    }
+                    onBlur={() =>
+                      bottomSheetTextInputRef.current?.snapToIndex(0)
+                    }
+                    placeholder="Note"
+                    value={noteInput}
+                    onChangeText={(text) => {
+                      setNoteInput(text);
+                    }}
+                  />
+                </>
+              ) : null}
+              {notePromo === NotePromoChoice.PROMO ? (
+                <>
+                  <View className="m-2 mb-0 flex-row justify-between">
+                    <AppText className="text-xl">Add a Promo Code</AppText>
+                  </View>
+                  <AppTextInput
+                    autoFocus
+                    onFocus={() =>
+                      bottomSheetTextInputRef.current?.snapToPosition(460)
+                    }
+                    onBlur={() =>
+                      bottomSheetTextInputRef.current?.snapToIndex(0)
+                    }
+                    placeholder="Promo Code"
+                    value={promoInput}
+                    onChangeText={(text) => {
+                      setPromoInput(text);
+                    }}
+                  />
+                </>
+              ) : null}
+              <AppButton
+                title="Done"
+                color="bg-primary"
+                textColor="text-white"
+                onPress={() => {
+                  bottomSheetTextInputRef.current?.snapToIndex(0);
+                  Keyboard.dismiss();
+                }}
+              />
+            </View>
+          </BottomSheet>
+        ) : null}
+
         <Modal
           animationType="slide"
           visible={pickupLocationModelVisible}
@@ -760,5 +1008,12 @@ const places: Place[] = [
     city: "Kopan, Kathmandu",
     latitude: 27.7654,
     longitude: 85.3666,
+  },
+  {
+    id: 11,
+    title: "Leapfrog Technology Inc.",
+    city: "Charkhal Rd, Kathmandu",
+    latitude: 27.7074128,
+    longitude: 85.3273696,
   },
 ];
