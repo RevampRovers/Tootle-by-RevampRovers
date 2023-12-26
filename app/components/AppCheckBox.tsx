@@ -16,15 +16,16 @@ export default function AppCheckBox({
   onValueChange: (newValue: boolean) => void;
 }) {
   return (
-    <View className={`flex-row items-center ${my0 ? "my-0" : "my-0"}`}>
+    <View className={`flex-row items-center ${my0 ? "my-0" : "my-0"} border-primary rounded-lg py-2 px-2 my-2`} style={{borderWidth: 1}}>
       <CheckBox
-        className="m-2"
+        className="m-2 ml-3 my-3"
+        style={{ height: 23,width: 23}}
         color={colors.primary}
         value={value}
         onValueChange={onValueChange}
         {...otherProps}
       />
-      <AppText>{label}</AppText>
+      <AppText className="text-base ml-2">{label}</AppText>
     </View>
   );
 }
