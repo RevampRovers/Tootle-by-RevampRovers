@@ -27,7 +27,8 @@ export default function OffersScreen({
   return (
     <>
       <Screen
-        className="p-5"
+        // className="p-5"
+        backgroundColor="white"
         noSafeArea
         refreshControl={
           <RefreshControl refreshing={false} onRefresh={() => {}} />

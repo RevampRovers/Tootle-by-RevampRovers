@@ -41,7 +41,7 @@ export default function AppTimePicker({
             value={time ? new Date(time) : new Date()}
             style={{
               position: "absolute",
-              transform: [{ scaleX: 4 }, { scaleY: 1 }],
+              transform: [{ scaleX: 3.4 }, { scaleY: 1 }],
             }}
             mode="time"
             onChange={(event, selectedDate) => {

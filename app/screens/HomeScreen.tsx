@@ -108,7 +108,7 @@ export default function HomeScreen({
       setMapTouched(false);
     },
     [dragValue],
-    50
+    200
   );
 
   const snapPoints = useMemo(
