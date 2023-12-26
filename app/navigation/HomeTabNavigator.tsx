@@ -8,7 +8,6 @@ import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import colors from "../config/colors";
-import History2Screen from "../screens/History2Screen";
 
 export type HomeTabNavigatorParamList = {
   [routes.HOME]: undefined;
@@ -56,14 +55,6 @@ export default function HomeTabNavigator() {
         name={routes.HISTORY}
         options={{
           title: "History",
-          tabBarIcon: tabHistory,
-        }}
-      />
-      <Tab.Screen
-        component={History2Screen}
-        name={routes.HISTORY_2}
-        options={{
-          title: "History2",
           tabBarIcon: tabHistory,
         }}
       />
