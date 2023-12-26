@@ -21,6 +21,7 @@ export interface MainInputProps extends TextInputProps {
   setSecureTextEntry?: (value: boolean) => void;
   textClassName?: string;
   noBorder?: boolean;
+  buttomSheet?: boolean;
 }
 
 export interface AppTextInputProps extends MainInputProps {
@@ -62,7 +63,7 @@ function MainInput({
           )}
         </View>
       )}
-      {children || (
+      {children ?? (
         <TextInput
           placeholderTextColor={colors.mediumGray}
           style={[defaultStyles.text]}
