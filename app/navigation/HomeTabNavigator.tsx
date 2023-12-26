@@ -8,13 +8,16 @@ import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import colors from "../config/colors";
-import History2Screen from "../screens/History2Screen";
+import OffersScreen from "../screens/OffersScreen";
+import { Promo } from "../utils/constants";
 
 export type HomeTabNavigatorParamList = {
-  [routes.HOME]: undefined;
+  [routes.HOME]: {
+    promo: Promo | null;
+  };
   [routes.SETTINGS]: undefined;
   [routes.HISTORY]: undefined;
-  [routes.HISTORY_2]: undefined;
+  [routes.OFFERS]: undefined;
 };
 
 interface TabIconProps {
@@ -25,11 +28,17 @@ interface TabIconProps {
 const tabToolsIcon = ({ color, size }: TabIconProps) => (
   <MaterialCommunityIcons color={color} name="car" size={size} />
 );
+
 const tabSettingsIcon = ({ color, size }: TabIconProps) => (
   <Ionicons name="md-settings-sharp" size={size} color={color} />
 );
-const tabHistory = ({ color, size }: TabIconProps) => (
+
+const tabHistoryIcon = ({ color, size }: TabIconProps) => (
   <MaterialCommunityIcons color={color} name="history" size={size} />
+);
+
+const tabOfferIcon = ({ color, size }: TabIconProps) => (
+  <MaterialCommunityIcons color={color} name="shopping" size={size} />
 );
 
 export default function HomeTabNavigator() {
@@ -46,6 +55,9 @@ export default function HomeTabNavigator() {
       <Tab.Screen
         component={HomeScreen}
         name={routes.HOME}
+        initialParams={{
+          promo: null,
+        }}
         options={{
           headerShown: false,
           tabBarIcon: tabToolsIcon,
@@ -56,15 +68,16 @@ export default function HomeTabNavigator() {
         name={routes.HISTORY}
         options={{
           title: "History",
-          tabBarIcon: tabHistory,
+          tabBarIcon: tabHistoryIcon,
         }}
       />
       <Tab.Screen
-        component={History2Screen}
-        name={routes.HISTORY_2}
+        component={OffersScreen}
+        name={routes.OFFERS}
         options={{
-          title: "History2",
-          tabBarIcon: tabHistory,
+          title: "Promos",
+          headerTitle: "Offers and Promos",
+          tabBarIcon: tabOfferIcon,
         }}
       />
       <Tab.Screen

@@ -8,5 +8,9 @@ import {
 export const navigationRef = createRef<NavigationContainerRef<ParamListBase>>();
 
 export function navigate(name: string, params: Object) {
+  navigationRef.current?.navigate(name, params);
+}
+
+export function navigatePush(name: string, params: Object) {
   navigationRef.current?.dispatch(StackActions.push(name, params));
 }

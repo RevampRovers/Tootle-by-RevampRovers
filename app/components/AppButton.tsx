@@ -1,4 +1,4 @@
-import { TouchableHighlight, TouchableOpacity } from "react-native";
+import { TouchableHighlight, TouchableOpacity, View } from "react-native";
 
 import colors from "../config/colors";
 import AppText from "./AppText";
@@ -12,6 +12,7 @@ interface AppButtonProps {
   className?: string;
   style?: Object;
   disabled?: boolean;
+  icon?: React.ReactNode;
 }
 
 export default function AppButton({
@@ -23,10 +24,11 @@ export default function AppButton({
   className,
   style,
   disabled = false,
+  icon,
 }: AppButtonProps) {
   return (
     <TouchableOpacity
-      className={`${color} my-2 h-12 items-center justify-center rounded-xl ${className} ${
+      className={`${color} my-2 h-12 flex-row items-center justify-center rounded-xl ${className} ${
         disabled ? "opacity-50" : ""
       }`}
       style={style}
@@ -37,6 +39,7 @@ export default function AppButton({
       >
         {title}
       </AppText>
+      {icon ? <View className="ml-4">{icon}</View> : null}
     </TouchableOpacity>
   );
 }
