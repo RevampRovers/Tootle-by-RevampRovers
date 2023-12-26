@@ -42,8 +42,8 @@ export default function HistoryScreen() {
   );
 
   return (
-    <Screen noKeyboardAwareScroll backgroundColor="white">
-      <View className="my-3 mx-5 flex-row justify-center rounded-xl bg-light p-2">
+    <Screen noKeyboardAwareScroll>
+      <View className="my-3 mx-5 flex-row justify-center rounded-xl bg-gray-200 p-2">
         {Object.values(ServiceType).map((type) => (
           <TouchableOpacity
             key={type}
