@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import CheckBox from "expo-checkbox";
 import AppText from "./AppText";
 import colors from "../config/colors";
@@ -16,10 +16,16 @@ export default function AppCheckBox({
   onValueChange: (newValue: boolean) => void;
 }) {
   return (
-    <View className={`flex-row items-center ${my0 ? "my-0" : "my-0"} border-primary rounded-lg py-2 px-2 my-2`} style={{borderWidth: 1}}>
+    <View
+      pointerEvents="none"
+      className={`flex-row items-center ${
+        my0 ? "my-0" : "my-0"
+      } border-primary rounded-lg py-2 px-2 my-2`}
+      style={{ borderWidth: 1 }}
+    >
       <CheckBox
         className="m-2 ml-3 my-3"
-        style={{ height: 23,width: 23}}
+        style={{ height: 23, width: 23 }}
         color={colors.primary}
         value={value}
         onValueChange={onValueChange}

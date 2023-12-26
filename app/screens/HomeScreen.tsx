@@ -35,17 +35,14 @@ import ActivityIndicator from "../components/ActivityIndicator";
 import { navigate } from "../navigation/routeNavigation";
 import routes from "../navigation/routes";
 import useDebounce from "../utils/useDebounce";
+import CancelModal, {
+  ButtomSheetState,
+} from "../components/cancel/CancelModal";
 
 enum ServiceType {
   BIKE = "BIKE",
   CAR = "CAR",
   DELIVERY = "DELIVERY",
-}
-
-enum ButtomSheetState {
-  LOCATION_PICKER = "LOCATION_PICKER",
-  PAYMENT_METHOD = "PAYMENT_METHOD",
-  RIDE_FOUND = "RIDE_FOUND",
 }
 
 enum NotePromoChoice {
@@ -66,6 +63,7 @@ export default function HomeScreen() {
   const bottomSheetTextInputRef = useRef<BottomSheet>(null);
   const [dragValue, setDragValue] = useState<number>(0);
 
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [notePromo, setNotePromo] = useState<NotePromoChoice | null>(null);
   const [promoInput, setPromoInput] = useState<string>("");
   const [noteInput, setNoteInput] = useState<string>("");
@@ -643,28 +641,29 @@ export default function HomeScreen() {
                   title="Cancel Ride"
                   className="flex-1 bg-[#c93a3a]"
                   onPress={() => {
-                    Alert.alert(
-                      "Cancel Ride",
-                      "Are you sure you want to cancel the ride?",
-                      [
-                        {
-                          text: "No",
-                          onPress: () => {},
-                        },
-                        {
-                          text: "Yes",
-                          onPress: () => {
-                            setArtificalLoading(true);
-                            setTimeout(() => {
-                              setButtomSheetState(
-                                ButtomSheetState.LOCATION_PICKER
-                              );
-                              setArtificalLoading(false);
-                            }, 500);
-                          },
-                        },
-                      ]
-                    );
+                    setCancelModalOpen(true);
+                    // Alert.alert(
+                    //   "Cancel Ride",
+                    //   "Are you sure you want to cancel the ride?",
+                    //   [
+                    //     {
+                    //       text: "No",
+                    //       onPress: () => {},
+                    //     },
+                    //     {
+                    //       text: "Yes",
+                    //       onPress: () => {
+                    //         setArtificalLoading(true);
+                    //         setTimeout(() => {
+                    //           setButtomSheetState(
+                    //             ButtomSheetState.LOCATION_PICKER
+                    //           );
+                    //           setArtificalLoading(false);
+                    //         }, 500);
+                    //       },
+                    //     },
+                    //   ]
+                    // );
                   }}
                 />
                 <TouchableOpacity
@@ -775,6 +774,12 @@ export default function HomeScreen() {
           </BottomSheet>
         ) : null}
 
+        <CancelModal
+          setModalOpen={setCancelModalOpen}
+          modalOpen={cancelModalOpen}
+          setButtomSheetState={setButtomSheetState}
+          setArtificalLoading={setArtificalLoading}
+        />
         <Modal
           animationType="slide"
           visible={pickupLocationModelVisible}
