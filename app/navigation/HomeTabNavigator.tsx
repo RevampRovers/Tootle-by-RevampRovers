@@ -8,6 +8,7 @@ import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import colors from "../config/colors";
+import CancelScreen from "../components/cancel/CancelScreen";
 import History2Screen from "../screens/History2Screen";
 // import TutorialsScreen from "../screens/TutorialsScreen";
 // import NotificationsScreen from "../screens/NotificationsScreen";
@@ -16,6 +17,7 @@ export type HomeTabNavigatorParamList = {
   [routes.HOME]: undefined;
   [routes.SETTINGS]: undefined;
   [routes.HISTORY]: undefined;
+  [routes.RIDE_CANCEL]: undefined;
   [routes.HISTORY_2]: undefined;
 };
 
@@ -33,6 +35,7 @@ const tabSettingsIcon = ({ color, size }: TabIconProps) => (
 const tabHistory = ({ color, size }: TabIconProps) => (
   <MaterialCommunityIcons color={color} name="history" size={size} />
 );
+
 export default function HomeTabNavigator() {
   const Tab = createBottomTabNavigator<HomeTabNavigatorParamList>();
 
@@ -76,6 +79,23 @@ export default function HomeTabNavigator() {
           tabBarIcon: tabSettingsIcon,
         }}
       />
+      {/* <Tab.Screen
+        component={CancelScreen}
+        name={routes.RIDE_CANCEL}
+        options={({ navigation }) => ({
+          title: "Cancellation",
+          tabBarIcon: tabSettingsIcon,
+          headerLeft: () => (
+            <Ionicons
+              name="chevron-back"
+              size={27}
+              color={colors.primary}
+              style={{ marginLeft: 20 }}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+        })}
+      /> */}
     </Tab.Navigator>
   );
 }
