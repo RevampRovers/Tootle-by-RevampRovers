@@ -40,11 +40,13 @@ const cancelContent = [
 ];
 
 export default function CancelModal({
+  resetInputs,
   modalOpen,
   setModalOpen,
   setButtomSheetState,
   setArtificalLoading,
 }: {
+  resetInputs: () => void;
   modalOpen: boolean;
   setModalOpen: (value: boolean) => void;
   setButtomSheetState: (value: ButtomSheetState) => void;
@@ -65,6 +67,7 @@ export default function CancelModal({
       setArtificalLoading(false);
       setTextAreaValue("");
       setSelectedItem(null);
+      resetInputs();
     }, 1000);
     Alert.alert(
       "We're so sad about your cancellation",

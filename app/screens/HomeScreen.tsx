@@ -84,6 +84,10 @@ export default function HomeScreen({
   const [destinationLocation, setDestinationLocation] = useState<Place | null>(
     null
   );
+
+  console.log({
+    destinationLocation,
+  });
   const [destinationLocationInput, setDestinationLocationInput] =
     useState<string>("");
   const [artificalLoading, setArtificalLoading] = useState(false);
@@ -106,7 +110,7 @@ export default function HomeScreen({
       setMapTouched(false);
     },
     [dragValue],
-    200
+    50
   );
 
   const snapPoints = useMemo(
@@ -228,6 +232,17 @@ export default function HomeScreen({
     });
   }, [destinationLocationInput]);
 
+  const resetInputs = useCallback(() => {
+    setPickupLocationInput("");
+    setDestinationLocationInput("");
+    setPickupLocation(places.find((place) => place.id === 11) || null);
+    setDestinationLocation(null);
+    setRidePriceInput("200");
+    setPaymentMethod("Cash");
+    setNoteInput("");
+    setPromoInput("");
+  }, []);
+
   return (
     <Screen noSafeArea noKeyboardAwareScroll className="flex-1">
       <View className="flex-1">
@@ -258,6 +273,7 @@ export default function HomeScreen({
         >
           {pickupLocation && (
             <MapMarker
+              key={pickupLocation.id}
               coordinate={{
                 latitude: pickupLocation.latitude,
                 longitude: pickupLocation.longitude,
@@ -267,6 +283,7 @@ export default function HomeScreen({
           )}
           {destinationLocation && (
             <MapMarker
+              key={destinationLocation.id}
               coordinate={{
                 latitude: destinationLocation.latitude,
                 longitude: destinationLocation.longitude,
@@ -690,6 +707,7 @@ export default function HomeScreen({
         ) : null}
 
         <CancelModal
+          resetInputs={resetInputs}
           setModalOpen={setCancelModalOpen}
           modalOpen={cancelModalOpen}
           setButtomSheetState={setButtomSheetState}
