@@ -19,8 +19,6 @@ export type HomeTabNavigatorParamList = {
   [routes.HISTORY]: undefined;
   [routes.RIDE_CANCEL]: undefined;
   [routes.HISTORY_2]: undefined;
-
-
 };
 
 interface TabIconProps {
@@ -37,7 +35,6 @@ const tabSettingsIcon = ({ color, size }: TabIconProps) => (
 const tabHistory = ({ color, size }: TabIconProps) => (
   <MaterialCommunityIcons color={color} name="history" size={size} />
 );
-
 
 export default function HomeTabNavigator() {
   const Tab = createBottomTabNavigator<HomeTabNavigatorParamList>();
@@ -58,7 +55,7 @@ export default function HomeTabNavigator() {
           tabBarIcon: tabToolsIcon,
         }}
       />
-        <Tab.Screen
+      <Tab.Screen
         component={HistoryScreen}
         name={routes.HISTORY}
         options={{
@@ -66,7 +63,7 @@ export default function HomeTabNavigator() {
           tabBarIcon: tabHistory,
         }}
       />
-       <Tab.Screen
+      <Tab.Screen
         component={History2Screen}
         name={routes.HISTORY_2}
         options={{
@@ -82,7 +79,7 @@ export default function HomeTabNavigator() {
           tabBarIcon: tabSettingsIcon,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         component={CancelScreen}
         name={routes.RIDE_CANCEL}
         options={({ navigation }) => ({
@@ -98,8 +95,7 @@ export default function HomeTabNavigator() {
             />
           ),
         })}
-      />
-    
+      /> */}
     </Tab.Navigator>
   );
 }
