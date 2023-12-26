@@ -6,22 +6,18 @@ import AppTextInput from "./AppTextInput";
 import AppText from "./AppText";
 import colors from "../config/colors";
 
-export default function AppDatePicker({
+export default function AppTimePicker({
   placeholder,
   label,
-  date,
-  onDateChange,
-  maximumDate,
-  minimumDate,
+  time,
+  onTimeChange,
   icon,
   my0,
 }: {
   placeholder: string;
   label: string;
-  date: Date;
-  onDateChange: (newDate: Date) => void;
-  maximumDate: Date | undefined;
-  minimumDate: Date | undefined;
+  time: Date;
+  onTimeChange: (newTime: Date) => void;
   icon?: string;
   my0?: boolean;
 }) {
@@ -41,24 +37,28 @@ export default function AppDatePicker({
           <DateTimePicker
             display={Platform.OS === "ios" ? "compact" : "default"}
             accentColor={colors.primary}
-            maximumDate={maximumDate}
-            minimumDate={minimumDate}
             testID="dateTimePicker"
-            value={date ? new Date(date) : new Date()}
+            value={time ? new Date(time) : new Date()}
             style={{
               position: "absolute",
-              transform: [{ scaleX: 2.5 }, { scaleY: 1 }],
+              transform: [{ scaleX: 4 }, { scaleY: 1 }],
             }}
-            mode="date"
+            mode="time"
             onChange={(event, selectedDate) => {
               setShow(false);
-              onDateChange(selectedDate || new Date(date) || new Date());
+              onTimeChange(selectedDate || new Date(time) || new Date());
             }}
           />
         ) : null}
         <View className="w-[92%] rounded-xl bg-white" pointerEvents="none">
           <AppText className="p-3 px-4">
-            {date ? new Date(date).toDateString() : placeholder}
+            {time
+              ? new Date(time).toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: true,
+                })
+              : placeholder}
           </AppText>
         </View>
       </AppTextInput>

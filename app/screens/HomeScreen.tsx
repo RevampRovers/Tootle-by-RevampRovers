@@ -36,6 +36,8 @@ import { Place, leapfrogToSxcRoute, offers, places } from "../utils/constants";
 import { RouteProp } from "@react-navigation/native";
 import { AppNavigatorParamList } from "../navigation/AppNavigator";
 import { HomeTabNavigatorParamList } from "../navigation/HomeTabNavigator";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import LocationPickerModal from "../components/LocationPickerModal";
 
 enum ServiceType {
   BIKE = "BIKE",
@@ -76,18 +78,14 @@ export default function HomeScreen({
     useState(false);
   const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.BIKE);
   const [mapTouched, setMapTouched] = useState(false);
+  const [ridePriceInput, setRidePriceInput] = useState<string>("200");
   const [pickupLocation, setPickupLocation] = useState<Place | null>(
     places.find((place) => place.id === 11) || null
   );
-  const [ridePriceInput, setRidePriceInput] = useState<string>("200");
   const [pickupLocationInput, setPickupLocationInput] = useState<string>("");
   const [destinationLocation, setDestinationLocation] = useState<Place | null>(
     null
   );
-
-  console.log({
-    destinationLocation,
-  });
   const [destinationLocationInput, setDestinationLocationInput] =
     useState<string>("");
   const [artificalLoading, setArtificalLoading] = useState(false);
@@ -133,26 +131,6 @@ export default function HomeScreen({
       bottomSheetTextInputRef.current?.close();
     }
   }, [notePromo]);
-
-  useEffect(() => {
-    if (pickupLocationModelVisible) {
-      if (pickupLocation) {
-        setPickupLocationInput(pickupLocation.title);
-      } else {
-        setPickupLocationInput("");
-      }
-    }
-  }, [pickupLocationModelVisible]);
-
-  useEffect(() => {
-    if (destinationLocationModelVisible) {
-      if (destinationLocation) {
-        setDestinationLocationInput(destinationLocation.title);
-      } else {
-        setDestinationLocationInput("");
-      }
-    }
-  }, [destinationLocationModelVisible]);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -209,15 +187,6 @@ export default function HomeScreen({
       });
     }
   }, [pickupLocation, destinationLocation]);
-
-  const filteredPickupPlaces = useMemo(() => {
-    return places.filter((place) => {
-      return (
-        place.title.toLowerCase().includes(pickupLocationInput.toLowerCase()) ||
-        place.city.toLowerCase().includes(pickupLocationInput.toLowerCase())
-      );
-    });
-  }, [pickupLocationInput]);
 
   const filteredDestinationPlaces = useMemo(() => {
     return places.filter((place) => {
@@ -381,7 +350,11 @@ export default function HomeScreen({
                   title="Schedule Ride"
                   className="flex-1"
                   onPress={() => {
-                    // bottomSheetRef.current?.snapTo(0);
+                    navigate(routes.SCHEDULE_RIDE, {
+                      serviceType,
+                      pickupLocation,
+                      destinationLocation,
+                    });
                   }}
                 />
                 <AppButton
@@ -713,156 +686,22 @@ export default function HomeScreen({
           setButtomSheetState={setButtomSheetState}
           setArtificalLoading={setArtificalLoading}
         />
-        <Modal
-          animationType="slide"
-          visible={pickupLocationModelVisible}
-          onRequestClose={() => {
-            setPickupLocationModelVisible(false);
-          }}
-        >
-          <View className="flex-1 pt-10">
-            <View className="flex-row items-center pl-5 pr-2">
-              <AppTextInput
-                clearButtonMode="always"
-                autoFocus
-                label=""
-                value={pickupLocationInput}
-                onChangeText={(text) => {
-                  setPickupLocationInput(text);
-                }}
-                className="flex-1 mr-2"
-                placeholder="Pickup Location"
-                icon="my-location"
-                materialIcons
-              />
-              <Button
-                color={colors.primary}
-                title="Cancel"
-                onPress={() => {
-                  setPickupLocationModelVisible(false);
-                }}
-              />
-            </View>
-            <KeyboardAwareScrollView
-              refreshControl={
-                <RefreshControl refreshing={false} onRefresh={() => {}} />
-              }
-              contentContainerStyle={{
-                paddingBottom: 40,
-              }}
-              enableResetScrollToCoords={false}
-              keyboardShouldPersistTaps="handled"
-              keyboardOpeningTime={0}
-            >
-              {filteredPickupPlaces.length === 0 ? (
-                <NoPlacesFound />
-              ) : (
-                <>
-                  {filteredPickupPlaces.map((place, index) => (
-                    <View key={place.id}>
-                      {index !== 0 && <ListItemSeparator />}
-                      <TouchableHighlight
-                        onPress={() => {
-                          setPickupLocation(place);
-                          setPickupLocationModelVisible(false);
-                        }}
-                        underlayColor={colors.highlight}
-                      >
-                        <View className="px-5 py-3 flex-row items-center">
-                          <MaterialCommunityIcons
-                            // color={colors.primary}
-                            name={"map-marker"}
-                            size={32}
-                          />
-                          <View>
-                            <AppText className="ml-2 text-base">
-                              {place.title}
-                            </AppText>
-                            <AppText className="ml-2 text-mediumGray">
-                              {place.city}
-                            </AppText>
-                          </View>
-                        </View>
-                      </TouchableHighlight>
-                    </View>
-                  ))}
-                </>
-              )}
-            </KeyboardAwareScrollView>
-          </View>
-        </Modal>
-        <Modal
-          animationType="slide"
-          visible={destinationLocationModelVisible}
-          onRequestClose={() => {
-            setDestinationLocationModelVisible(false);
-          }}
-        >
-          <View className="flex-1 pt-10">
-            <View className="flex-row items-center pl-5 pr-2">
-              <AppTextInput
-                clearButtonMode="always"
-                autoFocus
-                label=""
-                value={destinationLocationInput}
-                onChangeText={(text) => {
-                  setDestinationLocationInput(text);
-                }}
-                className="flex-1 mr-2"
-                placeholder="Drop Location"
-                icon="map-marker"
-              />
-              <Button
-                color={colors.primary}
-                title="Cancel"
-                onPress={() => {
-                  setDestinationLocationModelVisible(false);
-                }}
-              />
-            </View>
-            {filteredDestinationPlaces.length === 0 && <NoPlacesFound />}
-            <KeyboardAwareScrollView
-              refreshControl={
-                <RefreshControl refreshing={false} onRefresh={() => {}} />
-              }
-              contentContainerStyle={{
-                paddingBottom: 40,
-              }}
-              enableResetScrollToCoords={false}
-              keyboardShouldPersistTaps="handled"
-              keyboardOpeningTime={0}
-            >
-              {filteredDestinationPlaces.map((place, index) => (
-                <View key={place.id}>
-                  {index !== 0 && <ListItemSeparator />}
-                  <TouchableHighlight
-                    onPress={() => {
-                      setDestinationLocation(place);
-                      setDestinationLocationModelVisible(false);
-                    }}
-                    underlayColor={colors.highlight}
-                  >
-                    <View className="px-5 py-3 flex-row items-center">
-                      <MaterialCommunityIcons
-                        // color={colors.primary}
-                        name={"map-marker"}
-                        size={32}
-                      />
-                      <View>
-                        <AppText className="ml-2 text-base">
-                          {place.title}
-                        </AppText>
-                        <AppText className="ml-2 text-mediumGray">
-                          {place.city}
-                        </AppText>
-                      </View>
-                    </View>
-                  </TouchableHighlight>
-                </View>
-              ))}
-            </KeyboardAwareScrollView>
-          </View>
-        </Modal>
+        <LocationPickerModal
+          location={pickupLocation}
+          setLocation={setPickupLocation}
+          textInput={pickupLocationInput}
+          setTextInput={setPickupLocationInput}
+          modalVisible={pickupLocationModelVisible}
+          setModalVisible={setPickupLocationModelVisible}
+        />
+        <LocationPickerModal
+          location={destinationLocation}
+          setLocation={setDestinationLocation}
+          textInput={destinationLocationInput}
+          setTextInput={setDestinationLocationInput}
+          modalVisible={destinationLocationModelVisible}
+          setModalVisible={setDestinationLocationModelVisible}
+        />
       </View>
     </Screen>
   );
