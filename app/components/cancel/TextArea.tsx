@@ -16,7 +16,7 @@ const TextArea: React.FC<TextAreaProps> = ({
 }) => {
   return (
     <TextInput
-      className="border-primary rounded-lg p-4"
+      className="border-primary border-2 rounded-lg p-4"
       style={styles.textArea}
       multiline
       numberOfLines={numberOfLines}
@@ -29,7 +29,6 @@ const TextArea: React.FC<TextAreaProps> = ({
 
 const styles = StyleSheet.create({
   textArea: {
-    borderWidth: 1,
     marginVertical: 8,
     height: 160,
   },

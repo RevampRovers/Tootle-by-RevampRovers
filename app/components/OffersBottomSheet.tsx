@@ -103,7 +103,7 @@ export default function OffersBottomSheet() {
             title="Apply Code"
             onPress={() => {
               setActivePromo(null);
-              Alert.alert("Promo Code Applied for your next ride!");
+              Alert.alert("Promo Code applied for your next ride!");
               navigate(routes.HOME, {
                 promo: activePromo,
               });

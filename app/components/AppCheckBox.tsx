@@ -20,8 +20,7 @@ export default function AppCheckBox({
       pointerEvents="none"
       className={`flex-row items-center ${
         my0 ? "my-0" : "my-0"
-      } border-primary rounded-lg py-2 px-2 my-2`}
-      style={{ borderWidth: 1 }}
+      } border-primary border-2 rounded-lg py-2 px-2 my-2`}
     >
       <CheckBox
         className="m-2 ml-3 my-3"
