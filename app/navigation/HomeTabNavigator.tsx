@@ -33,7 +33,7 @@ const tabAccountIcon = ({ color, size }: TabIconProps) => (
 );
 
 const tabHistoryIcon = ({ color, size }: TabIconProps) => (
-  <MaterialCommunityIcons color={color} name="history" size={size} />
+  <MaterialCommunityIcons color={color} name="clock" size={size} />
 );
 
 const tabOfferIcon = ({ color, size }: TabIconProps) => (
