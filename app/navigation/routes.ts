@@ -6,6 +6,7 @@ enum routes {
   CHAT = "Chat",
   OFFERS = "Offers",
   SCHEDULE_RIDE = "ScheduleRide ",
+  SOS = "SOS",
 }
 
 export default routes;

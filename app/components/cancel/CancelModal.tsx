@@ -6,6 +6,7 @@ import AppButton from "../AppButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import colors from "../../config/colors";
 import { ListItemSeparator } from "../lists";
+import Constants from "expo-constants";
 
 export enum ButtomSheetState {
   LOCATION_PICKER = "LOCATION_PICKER",
@@ -86,7 +87,12 @@ export default function CancelModal({
         setModalOpen(!modalOpen);
       }}
     >
-      <View className="py-2 px-5 pt-11 items-start">
+      <View
+        className="py-2 px-5 items-start"
+        style={{
+          paddingTop: Constants.statusBarHeight,
+        }}
+      >
         <Button
           aria-label="Cancel Popup"
           title="Cancel"

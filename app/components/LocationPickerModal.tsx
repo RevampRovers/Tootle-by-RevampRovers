@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useEffect, useMemo } from "react";
 import { Place, places } from "../utils/constants";
 import NoPlacesFound from "./NoPlacesFound";
+import Constants from "expo-constants";
 import { ListItemSeparator } from "./lists";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
@@ -57,7 +58,12 @@ export default function LocationPickerModal({
         setModalVisible(false);
       }}
     >
-      <View className="flex-1 pt-10">
+      <View
+        className="flex-1"
+        style={{
+          paddingTop: Constants.statusBarHeight,
+        }}
+      >
         <View className="flex-row items-center pl-5 pr-2">
           <AppTextInput
             clearButtonMode="always"
