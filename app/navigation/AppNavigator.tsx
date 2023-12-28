@@ -10,6 +10,7 @@ import HomeTabNavigator, {
 import ChatScreen from "../screens/ChatScreen";
 import ScheduleRideScreen from "../components/ScheduleRideModal";
 import { Place } from "../utils/constants";
+import SosScreen from "../screens/SosScreen";
 // import NotificationsScreen from "../screens/NotificationsScreen";
 
 type HomeTabParamList = {
@@ -19,6 +20,7 @@ type HomeTabParamList = {
 
 type MultiScreenParamList = {
   [routes.CHAT]: undefined;
+  [routes.SOS]: undefined;
   [routes.SCHEDULE_RIDE]: {
     serviceType: string;
     pickupLocation: Place | null;
@@ -59,6 +61,15 @@ export default function AppNavigator() {
         }}
         component={ChatScreen}
         name={routes.CHAT}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerBackTitle: "Back",
+          headerTitle: "SOS Options",
+        }}
+        component={SosScreen}
+        name={routes.SOS}
       />
       <Stack.Screen
         options={{

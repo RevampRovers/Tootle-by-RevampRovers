@@ -11,6 +11,35 @@ export type Promo = {
   code: string;
 };
 
+export type SosOption = {
+  title: string;
+  icon: string;
+  subtitle: string;
+};
+
+export const sosOptions: SosOption[] = [
+  {
+    title: "Call Emergency Contact",
+    icon: "phone",
+    subtitle: "Call your emergency contact",
+  },
+  {
+    title: "Show Medical Details",
+    icon: "folder-heart",
+    subtitle: "Show your medical details",
+  },
+  {
+    title: "Call the Police",
+    icon: "shield",
+    subtitle: "Call the nearest police station",
+  },
+  {
+    title: "Call an Ambulance",
+    icon: "ambulance",
+    subtitle: "Call the nearest ambulance",
+  },
+];
+
 export const offers: Promo[] = [
   {
     color: "#c93a3a",

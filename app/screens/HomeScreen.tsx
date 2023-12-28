@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Constants from "expo-constants";
 import { useEffect, useState } from "react";
 import MapView, { MapMarker, Polyline } from "react-native-maps";
 import React, { useCallback, useMemo, useRef } from "react";
@@ -273,6 +274,39 @@ export default function HomeScreen({
             />
           )}
         </MapView>
+        <View
+          style={{
+            paddingTop: Constants.statusBarHeight,
+          }}
+          className="absolute top-0 right-0"
+        >
+          <TouchableOpacity
+            accessibilityRole="button"
+            aria-label="Open SOS Menu"
+            onPress={() => {
+              navigate(routes.SOS, {});
+            }}
+            style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3,
+
+              elevation: 5,
+            }}
+            className="items-center h-14 w-14 justify-center rounded-full bg-white mr-2"
+          >
+            <MaterialCommunityIcons
+              color={colors.primary}
+              name="shield-account"
+              size={28}
+            />
+          </TouchableOpacity>
+        </View>
+
         <BottomSheet
           keyboardBlurBehavior="restore"
           // enableDynamicSizing
@@ -553,9 +587,27 @@ export default function HomeScreen({
               <ListItemSeparator />
               <View className="m-2 mb-1 flex-row justify-between">
                 <AppText className="text-xl">Payment Method</AppText>
-                <AppText className="text-primary font-bold text-xl">
-                  Rs. {ridePriceInput}
-                </AppText>
+                {promoInput ? (
+                  <View className="flex-row">
+                    <AppText
+                      accessibilityLabel={`Original Price ${ridePriceInput}`}
+                      className="line-through text-mediumGray text-xl"
+                    >{`Rs. ${ridePriceInput}`}</AppText>
+                    <AppText
+                      accessibilityLabel={`Discounted Price ${+(
+                        +ridePriceInput -
+                        +ridePriceInput * 0.15
+                      )}`}
+                      className="text-primary font-bold text-xl"
+                    >
+                      {`  Rs. ${+(+ridePriceInput - +ridePriceInput * 0.15)}`}
+                    </AppText>
+                  </View>
+                ) : (
+                  <AppText className="text-primary font-bold text-xl">
+                    `Rs. ${ridePriceInput}`
+                  </AppText>
+                )}
               </View>
               <AppText className="mb-2 text-primary font-bold mx-2 text-lg">
                 {paymentMethod}
