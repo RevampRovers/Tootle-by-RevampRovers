@@ -1,5 +1,6 @@
 import { Switch, TouchableWithoutFeedback, View, Platform } from "react-native";
 import AppText from "./AppText";
+import colors from "../config/colors";
 
 export default function AppSwitch({
   my0,
@@ -52,6 +53,7 @@ export default function AppSwitch({
       >
         <AppText className="text-base flex-1 py-3">{label}</AppText>
         <Switch
+          trackColor={{ false: colors.light, true: colors.primary }}
           aria-hidden
           accessibilityElementsHidden
           className="ml-2"

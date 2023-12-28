@@ -1,21 +1,20 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import routes from "./routes";
 import defaultStyles from "../config/styles";
 import HomeScreen from "../screens/HomeScreen";
-import SettingsScreen from "../screens/SettingsScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import colors from "../config/colors";
 import OffersScreen from "../screens/OffersScreen";
 import { Promo } from "../utils/constants";
+import AccountScreen from "../screens/AccountScreen";
 
 export type HomeTabNavigatorParamList = {
   [routes.HOME]: {
     promo: Promo | null;
   };
-  [routes.SETTINGS]: undefined;
+  [routes.ACCOUNT]: undefined;
   [routes.HISTORY]: undefined;
   [routes.OFFERS]: undefined;
 };
@@ -29,8 +28,8 @@ const tabToolsIcon = ({ color, size }: TabIconProps) => (
   <MaterialCommunityIcons color={color} name="car" size={size} />
 );
 
-const tabSettingsIcon = ({ color, size }: TabIconProps) => (
-  <Ionicons name="md-settings-sharp" size={size} color={color} />
+const tabAccountIcon = ({ color, size }: TabIconProps) => (
+  <Ionicons name="person" color={color} size={size} />
 );
 
 const tabHistoryIcon = ({ color, size }: TabIconProps) => (
@@ -81,11 +80,10 @@ export default function HomeTabNavigator() {
         }}
       />
       <Tab.Screen
-        component={SettingsScreen}
-        name={routes.SETTINGS}
+        component={AccountScreen}
+        name={routes.ACCOUNT}
         options={{
-          title: "Settings",
-          tabBarIcon: tabSettingsIcon,
+          tabBarIcon: tabAccountIcon,
         }}
       />
     </Tab.Navigator>

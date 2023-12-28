@@ -605,7 +605,7 @@ export default function HomeScreen({
                   </View>
                 ) : (
                   <AppText className="text-primary font-bold text-xl">
-                    `Rs. ${ridePriceInput}`
+                    Rs. {ridePriceInput}
                   </AppText>
                 )}
               </View>
