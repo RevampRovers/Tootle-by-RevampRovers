@@ -1,7 +1,7 @@
 enum routes {
   HOME_TAB = "HomeTab",
   HOME = "Home",
-  SETTINGS = "Settings",
+  ACCOUNT = "Account",
   HISTORY = "History",
   CHAT = "Chat",
   OFFERS = "Offers",
