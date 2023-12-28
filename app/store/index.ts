@@ -7,6 +7,8 @@ interface BearState {
   setLanguage: (language: keyof typeof langToIndex) => void;
   activePromo: Promo | null;
   setActivePromo: (promo: Promo | null) => void;
+  riderMode: boolean;
+  setRiderMode: (mode: boolean) => void;
 }
 
 export const useBearStore = create<BearState>()((set) => ({
@@ -17,4 +19,6 @@ export const useBearStore = create<BearState>()((set) => ({
   },
   activePromo: null,
   setActivePromo: (promo) => set({ activePromo: promo }),
+  riderMode: false,
+  setRiderMode: (mode) => set({ riderMode: mode }),
 }));
