@@ -49,6 +49,7 @@ export default function OffersBottomSheet() {
     >
       <View className="p-5 py-2 items-center">
         <MaterialCommunityIcons
+          accessibilityLabel="Discount Icon"
           color={activePromo?.color}
           name="tag"
           size={72}
@@ -62,10 +63,12 @@ export default function OffersBottomSheet() {
           </AppText>
           <View className="mx-auto">
             <AppButton
+              accessibilityLabel="Copy Promo Code"
+              value={activePromo?.code}
               color="bg-primary"
               textColor="text-white"
               className="px-6"
-              title={`${activePromo?.code}`}
+              title={activePromo?.code || ""}
               onPress={() => {
                 Clipboard.setStringAsync(activePromo?.code || "");
                 Alert.alert("Promo Code Copied to clipboard!");
@@ -92,7 +95,7 @@ export default function OffersBottomSheet() {
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
           ].map((item, index) => (
-            <View key={index} className="flex-row mb-1">
+            <View key={index} accessible className="flex-row mb-1">
               <AppText className="text-mediumGray text-sm">{"\u2022 "}</AppText>
               <AppText className="text-mediumGray text-sm">{item}</AppText>
             </View>

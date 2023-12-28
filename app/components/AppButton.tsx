@@ -14,6 +14,7 @@ interface AppButtonProps {
   disabled?: boolean;
   icon?: React.ReactNode;
   value?: string;
+  accessibilityLabel?: string;
 }
 
 export default function AppButton({
@@ -27,9 +28,11 @@ export default function AppButton({
   disabled = false,
   icon,
   value,
+  accessibilityLabel,
 }: AppButtonProps) {
   return (
     <TouchableOpacity
+      accessibilityLabel={accessibilityLabel}
       accessibilityValue={
         value
           ? {

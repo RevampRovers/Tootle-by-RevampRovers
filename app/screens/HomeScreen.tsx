@@ -116,7 +116,7 @@ export default function HomeScreen({
       buttomSheetState === ButtomSheetState.LOCATION_PICKER
         ? [340]
         : buttomSheetState === ButtomSheetState.PAYMENT_METHOD
-        ? [400]
+        ? [406]
         : buttomSheetState === ButtomSheetState.RIDE_FOUND
         ? [320]
         : [0],
@@ -216,6 +216,7 @@ export default function HomeScreen({
     <Screen noSafeArea noKeyboardAwareScroll className="flex-1">
       <View className="flex-1">
         <MapView
+          accessibilityElementsHidden
           initialCamera={{
             center: {
               latitude: 27.6933113,
@@ -393,23 +394,29 @@ export default function HomeScreen({
           )}
           {buttomSheetState === ButtomSheetState.PAYMENT_METHOD && (
             <View className="px-5">
-              <View className="flex-row items-center">
-                <MaterialIcons
-                  color={colors.primary}
-                  name="my-location"
-                  size={32}
-                />
-                <AppText className="ml-2">{pickupLocation?.title}</AppText>
+              <View accessible>
+                <View className="py-1 flex-row items-center">
+                  <MaterialIcons
+                    accessibilityLabel="Pickup Location"
+                    color={colors.primary}
+                    name="my-location"
+                    size={32}
+                  />
+                  <AppText className="ml-2">{pickupLocation?.title}</AppText>
+                </View>
+                <View className="py-1 flex-row items-center">
+                  <MaterialCommunityIcons
+                    accessibilityLabel="Destination Location"
+                    color={colors.primary}
+                    name="map-marker"
+                    size={32}
+                  />
+                  <AppText className="ml-2">
+                    {destinationLocation?.title}
+                  </AppText>
+                </View>
               </View>
-              <View className="py-3 flex-row items-center">
-                <MaterialCommunityIcons
-                  color={colors.primary}
-                  name="map-marker"
-                  size={32}
-                />
-                <AppText className="ml-2">{destinationLocation?.title}</AppText>
-              </View>
-              <View className="flex-row gap-2">
+              <View className="flex-row gap-2 py-2">
                 <AppButton
                   value={noteInput ? "Added" : "Not Set"}
                   className="flex-1"
