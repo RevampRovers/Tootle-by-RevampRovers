@@ -46,6 +46,8 @@ export default function HistoryScreen() {
       <View className="my-3 mx-5 flex-row justify-center rounded-xl bg-gray-200 p-2">
         {Object.values(ServiceType).map((type) => (
           <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityState={{ selected: serviceType === type }}
             key={type}
             onPress={() => {
               setServiceType(type);
@@ -113,7 +115,6 @@ function ActivityContent({
         </View>
       )}
       <TouchableHighlight
-        accessibilityRole="button"
         underlayColor={colors.highlight}
         className="py-1 pb-3 px-4"
       >

@@ -13,6 +13,8 @@ interface AppButtonProps {
   style?: Object;
   disabled?: boolean;
   icon?: React.ReactNode;
+  value?: string;
+  accessibilityLabel?: string;
 }
 
 export default function AppButton({
@@ -25,9 +27,20 @@ export default function AppButton({
   style,
   disabled = false,
   icon,
+  value,
+  accessibilityLabel,
 }: AppButtonProps) {
   return (
     <TouchableOpacity
+      accessibilityLabel={accessibilityLabel}
+      accessibilityValue={
+        value
+          ? {
+              text: value,
+            }
+          : undefined
+      }
+      accessibilityRole="button"
       className={`${color} my-2 h-12 flex-row items-center justify-center rounded-xl ${className} ${
         disabled ? "opacity-50" : ""
       }`}

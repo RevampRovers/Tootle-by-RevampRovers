@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
 import {
+  AccessibilityInfo,
+  ActivityIndicator as NativeActivityIndicator,
   StyleSheet,
-  ActivityIndicator as SpinningIndicator,
 } from "react-native";
 import Animated, {
+  useAnimatedStyle,
   useSharedValue,
   withTiming,
-  useAnimatedStyle,
 } from "react-native-reanimated";
 import colors from "../config/colors";
 
-interface ActivityIndicatorProps {
+export default function ActivityIndicator({
+  visible,
+  className = "bg-white",
+  style,
+}: {
   visible: boolean;
-}
-
-export default function ActivityIndicator({ visible }: ActivityIndicatorProps) {
+  className?: string;
+  style?: object;
+}) {
   const [opaque, setOpaque] = useState(false);
-  const opacity = useSharedValue(0);
+  const opacity = useSharedValue(1);
 
   useEffect(() => {
     if (visible) {
@@ -28,6 +33,9 @@ export default function ActivityIndicator({ visible }: ActivityIndicatorProps) {
         setOpaque(false);
       }, 300);
     }
+    AccessibilityInfo.announceForAccessibility(
+      `Loading ${visible ? "started" : "finished"}`
+    );
   }, [visible]);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -37,11 +45,14 @@ export default function ActivityIndicator({ visible }: ActivityIndicatorProps) {
   if (!opaque) return null;
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
-      <SpinningIndicator
+    <Animated.View
+      style={[styles.container, animatedStyle, style]}
+      className={className}
+    >
+      <NativeActivityIndicator
         size="large"
-        className="flex-1"
         color={colors.primary}
+        style={{ flex: 1 }}
       />
     </Animated.View>
   );
@@ -49,7 +60,6 @@ export default function ActivityIndicator({ visible }: ActivityIndicatorProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.white,
     position: "absolute",
     zIndex: 50,
     height: "100%",

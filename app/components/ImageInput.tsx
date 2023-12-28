@@ -59,6 +59,7 @@ export default function ImageInput({
 
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       className="h-28 w-28 items-center justify-center overflow-hidden rounded-xl bg-lightGray"
       onPress={handlePress}
     >

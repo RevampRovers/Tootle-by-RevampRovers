@@ -99,19 +99,20 @@ export default function LocationPickerModal({
                 <View key={place.id}>
                   {index !== 0 && <ListItemSeparator />}
                   <TouchableHighlight
+                    accessibilityRole="button"
                     onPress={() => {
                       setLocation(place);
                       setModalVisible(false);
                     }}
                     underlayColor={colors.highlight}
                   >
-                    <View className="px-5 py-3 flex-row items-center">
+                    <View className="px-5 pb-3 pt-2 flex-row items-center">
                       <MaterialCommunityIcons
                         // color={colors.primary}
                         name={"map-marker"}
                         size={32}
                       />
-                      <View>
+                      <View className="justify-center">
                         <AppText className="ml-2 text-base">
                           {place.title}
                         </AppText>

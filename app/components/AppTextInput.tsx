@@ -47,7 +47,7 @@ function MainInput({
       } ${otherProps.clearButtonMode ? "pr-2" : ""}`}
     >
       {icon && (
-        <View className="ml-3">
+        <View accessibilityElementsHidden className="ml-3">
           {materialIcons ? (
             <MaterialIcons
               color={colors.primary}
@@ -74,6 +74,7 @@ function MainInput({
 
       {passwordField && (
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={() => {
             otherProps.setSecureTextEntry?.(!otherProps.secureTextEntry);
           }}
@@ -104,7 +105,7 @@ export default function AppTextInput({
         <AppText className="text-mediumGray mx-3 mt-2 text-sm">{label}</AppText>
       ) : null}
       {onPress ? (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity accessibilityRole="button" onPress={onPress}>
           <MainInput my0={my0} accessibilityLabel={label} {...otherProps}>
             {children}
           </MainInput>
