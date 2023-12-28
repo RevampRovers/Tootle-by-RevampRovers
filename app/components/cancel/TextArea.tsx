@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput, StyleSheet } from "react-native";
 
-interface TextAreaProps {
+interface TextAreaProps extends React.ComponentProps<typeof TextInput> {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
@@ -13,6 +13,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   onChangeText,
   placeholder = "Others",
   numberOfLines = 4,
+  ...otherProps
 }) => {
   return (
     <TextInput
@@ -23,6 +24,7 @@ const TextArea: React.FC<TextAreaProps> = ({
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
+      {...otherProps}
     />
   );
 };

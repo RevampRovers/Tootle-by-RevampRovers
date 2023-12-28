@@ -1,5 +1,5 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
@@ -27,7 +27,6 @@ SplashScreen.preventAutoHideAsync();
 // const prefix = Linking.createURL("/3d/models");
 
 export default function App() {
-  const [user, setUser] = useState();
   const [loadingVisible, setLoadingVisible] = useState(false);
 
   useEffect(() => {

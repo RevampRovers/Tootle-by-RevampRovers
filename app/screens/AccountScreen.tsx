@@ -12,6 +12,7 @@ import AppListItems from "../components/AppListItems";
 import { HomeTabNavigatorParamList } from "../navigation/HomeTabNavigator";
 import AppButton from "../components/AppButton";
 import AppSwitch from "../components/AppSwitch";
+import { useBearStore } from "../store";
 
 export default function AccountScreen({
   route,
@@ -24,7 +25,10 @@ export default function AccountScreen({
   >;
 }) {
   const [artificialLoading, setArtificialLoading] = useState(false);
-  const [riderMode, setRiderMode] = useState(false);
+
+  const riderMode = useBearStore((state) => state.riderMode);
+  const setRiderMode = useBearStore((state) => state.setRiderMode);
+
   return (
     <>
       <ActivityIndicator

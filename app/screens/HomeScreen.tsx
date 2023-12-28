@@ -1,4 +1,3 @@
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   Alert,
   Button,
@@ -6,6 +5,7 @@ import {
   Keyboard,
   Modal,
   RefreshControl,
+  Share,
   TouchableHighlight,
   TouchableOpacity,
   View,
@@ -39,6 +39,8 @@ import { AppNavigatorParamList } from "../navigation/AppNavigator";
 import { HomeTabNavigatorParamList } from "../navigation/HomeTabNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LocationPickerModal from "../components/LocationPickerModal";
+import TextArea from "../components/cancel/TextArea";
+import { ScrollView } from "react-native";
 
 enum ServiceType {
   BIKE = "BIKE",
@@ -68,7 +70,8 @@ export default function HomeScreen({
   const bottomSheetRef = useRef<BottomSheet>(null);
   const bottomSheetTextInputRef = useRef<BottomSheet>(null);
   const [dragValue, setDragValue] = useState<number>(0);
-
+  const [counter, setCounter] = useState<number>(10);
+  const [counter2, setCounter2] = useState<number>(10);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [notePromo, setNotePromo] = useState<NotePromoChoice | null>(null);
   const [promoInput, setPromoInput] = useState<string>("");
@@ -93,10 +96,80 @@ export default function HomeScreen({
   const [paymentMethod, setPaymentMethod] = useState<
     "Cash" | "Khalti" | "Business"
   >("Cash");
-
+  const [rate, setRate] = useState<number>(0);
   const [buttomSheetState, setButtomSheetState] = useState<ButtomSheetState>(
     ButtomSheetState.LOCATION_PICKER
   );
+  const [rideCompleteComment, setRideCompleteComment] = useState<string>("");
+
+  const snapPoints = useMemo(
+    () =>
+      buttomSheetState === ButtomSheetState.LOCATION_PICKER
+        ? [340]
+        : buttomSheetState === ButtomSheetState.PAYMENT_METHOD
+        ? [406]
+        : buttomSheetState === ButtomSheetState.RIDE_FOUND
+        ? [320]
+        : buttomSheetState === ButtomSheetState.RIDE_ONGOING
+        ? [268]
+        : buttomSheetState === ButtomSheetState.RIDE_COMPLETED
+        ? [640]
+        : [0],
+    [buttomSheetState]
+  );
+  const snapPointsTextInput = [1, 200];
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    let interval2: NodeJS.Timeout | null = null;
+    if (buttomSheetState === ButtomSheetState.RIDE_FOUND) {
+      setCounter(10);
+      interval = setInterval(() => {
+        setCounter((prev) => prev - 1);
+      }, 1000);
+    } else if (buttomSheetState === ButtomSheetState.RIDE_ONGOING) {
+      setCounter2(10);
+      interval2 = setInterval(() => {
+        setCounter2((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+      if (interval2) {
+        clearInterval(interval2);
+      }
+    };
+  }, [buttomSheetState]);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (counter === 0) {
+      setArtificalLoading(true);
+      timeout = setTimeout(() => {
+        setButtomSheetState(ButtomSheetState.RIDE_ONGOING);
+        setArtificalLoading(false);
+      }, 500);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [counter]);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (counter2 === 0) {
+      setArtificalLoading(true);
+      timeout = setTimeout(() => {
+        setButtomSheetState(ButtomSheetState.RIDE_COMPLETED);
+        setArtificalLoading(false);
+      }, 500);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [counter2]);
 
   useEffect(() => {
     if (promo) {
@@ -111,19 +184,6 @@ export default function HomeScreen({
     [dragValue],
     200
   );
-
-  const snapPoints = useMemo(
-    () =>
-      buttomSheetState === ButtomSheetState.LOCATION_PICKER
-        ? [340]
-        : buttomSheetState === ButtomSheetState.PAYMENT_METHOD
-        ? [406]
-        : buttomSheetState === ButtomSheetState.RIDE_FOUND
-        ? [320]
-        : [0],
-    [buttomSheetState]
-  );
-  const snapPointsTextInput = [1, 200];
 
   useEffect(() => {
     if (notePromo) {
@@ -188,19 +248,6 @@ export default function HomeScreen({
       });
     }
   }, [pickupLocation, destinationLocation]);
-
-  const filteredDestinationPlaces = useMemo(() => {
-    return places.filter((place) => {
-      return (
-        place.title
-          .toLowerCase()
-          .includes(destinationLocationInput.toLowerCase()) ||
-        place.city
-          .toLowerCase()
-          .includes(destinationLocationInput.toLowerCase())
-      );
-    });
-  }, [destinationLocationInput]);
 
   const resetInputs = useCallback(() => {
     setPickupLocationInput("");
@@ -539,7 +586,7 @@ export default function HomeScreen({
               <View className="mb-2 flex-row justify-between">
                 <AppText className="text-xl">Driver is on the way</AppText>
                 <AppText className="text-primary font-bold text-xl">
-                  1:00
+                  0:{counter < 10 ? `0${counter}` : counter}
                 </AppText>
               </View>
               <ListItemSeparator />
@@ -676,6 +723,257 @@ export default function HomeScreen({
                 </TouchableOpacity>
               </View>
             </View>
+          )}
+          {buttomSheetState === ButtomSheetState.RIDE_ONGOING && (
+            <View className="px-5">
+              <View className="mb-2 flex-row justify-center">
+                <AppText className="text-xl">Ride Ongoing</AppText>
+              </View>
+              <ListItemSeparator />
+              <View className="my-2 py-1 flex-row justify-between">
+                <View className="flex-1 flex-row items-center">
+                  <Image
+                    source={require("../assets/driverAvatar.png")}
+                    resizeMode="contain"
+                  />
+                  <View accessible className="px-3 flex-1">
+                    <AppText className="text-xl">John Doe</AppText>
+                    <View className="flex-row items-center">
+                      <MaterialCommunityIcons
+                        color={colors.primary}
+                        name="map-marker"
+                        size={16}
+                      />
+                      <AppText className="ml-1 text-mediumGray">
+                        800m (5 mins away)
+                      </AppText>
+                    </View>
+                    <View className="flex-row items-center">
+                      <MaterialIcons
+                        color={colors.yellow}
+                        name="star"
+                        size={16}
+                      />
+                      <AppText className="ml-1 text-mediumGray">
+                        4.5 rating
+                      </AppText>
+                    </View>
+                  </View>
+                  <View accessible className="items-center justify-center">
+                    <Image
+                      source={imageMap[serviceType]}
+                      className="w-20 h-10"
+                      resizeMode="contain"
+                    />
+                    <AppText className="mt-1">
+                      {toTitleCase(serviceType)}
+                    </AppText>
+                  </View>
+                </View>
+              </View>
+              <ListItemSeparator />
+              <View className="m-2 mb-1 flex-row justify-between">
+                <AppText className="text-xl">Payment Method</AppText>
+                {promoInput ? (
+                  <View className="flex-row">
+                    <AppText
+                      accessibilityLabel={`Original Price ${ridePriceInput}`}
+                      className="line-through text-mediumGray text-xl"
+                    >{`Rs. ${ridePriceInput}`}</AppText>
+                    <AppText
+                      accessibilityLabel={`Discounted Price ${+(
+                        +ridePriceInput -
+                        +ridePriceInput * 0.15
+                      )}`}
+                      className="text-primary font-bold text-xl"
+                    >
+                      {`  Rs. ${+(+ridePriceInput - +ridePriceInput * 0.15)}`}
+                    </AppText>
+                  </View>
+                ) : (
+                  <AppText className="text-primary font-bold text-xl">
+                    Rs. {ridePriceInput}
+                  </AppText>
+                )}
+              </View>
+              <View className="flex-row justify-center">
+                <AppText className="flex-1 mb-2 text-primary font-bold mx-2 text-lg">
+                  {paymentMethod}
+                </AppText>
+                <View className="my-2 flex-row items-center">
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    aria-label="Share Ride Progress"
+                    onPress={() => {
+                      Share.share({
+                        message: `I am on my way to ${destinationLocation?.title} from ${pickupLocation?.title}.`,
+                      });
+                    }}
+                    className="items-center justify-center border-2 mx-2 rounded-full h-12 w-12 border-primary"
+                  >
+                    <MaterialCommunityIcons
+                      color={colors.primary}
+                      name="share-variant"
+                      size={24}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    aria-label="Open in Google Maps"
+                    onPress={() => {
+                      Linking.openURL(
+                        `https://www.google.com/maps/dir/?api=1&origin=${pickupLocation?.latitude},${pickupLocation?.longitude}&destination=${destinationLocation?.latitude},${destinationLocation?.longitude}&travelmode=driving`
+                      );
+                    }}
+                    className="items-center justify-center border-2 rounded-full h-12 w-12 border-primary"
+                  >
+                    <MaterialCommunityIcons
+                      color={colors.primary}
+                      name="navigation"
+                      size={24}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          )}
+          {buttomSheetState === ButtomSheetState.RIDE_COMPLETED && (
+            <ScrollView
+              keyboardDismissMode="interactive"
+              keyboardShouldPersistTaps="handled"
+              className="px-5"
+            >
+              <View className="mb-2 flex-row justify-center">
+                <AppText className="text-xl">Ride Completed</AppText>
+              </View>
+              <ListItemSeparator />
+              <View className="my-2 py-1 flex-row justify-between">
+                <View className="flex-1 flex-row items-center">
+                  <Image
+                    source={require("../assets/driverAvatar.png")}
+                    resizeMode="contain"
+                  />
+                  <View accessible className="px-3 flex-1">
+                    <AppText className="text-xl">John Doe</AppText>
+                    <View className="flex-row items-center">
+                      <MaterialCommunityIcons
+                        color={colors.primary}
+                        name="map-marker"
+                        size={16}
+                      />
+                      <AppText className="ml-1 text-mediumGray">
+                        800m (5 mins away)
+                      </AppText>
+                    </View>
+                    <View className="flex-row items-center">
+                      <MaterialIcons
+                        color={colors.yellow}
+                        name="star"
+                        size={16}
+                      />
+                      <AppText className="ml-1 text-mediumGray">
+                        4.5 rating
+                      </AppText>
+                    </View>
+                  </View>
+                  <View accessible className="items-center justify-center">
+                    <Image
+                      source={imageMap[serviceType]}
+                      className="w-20 h-10"
+                      resizeMode="contain"
+                    />
+                    <AppText className="mt-1">
+                      {toTitleCase(serviceType)}
+                    </AppText>
+                  </View>
+                </View>
+              </View>
+              <ListItemSeparator />
+              <View accessible className="py-2">
+                <View className="py-1 flex-row items-center">
+                  <MaterialIcons
+                    accessibilityLabel="Pickup Location"
+                    color={colors.primary}
+                    name="my-location"
+                    size={32}
+                  />
+                  <AppText className="ml-2">{pickupLocation?.title}</AppText>
+                </View>
+                <View className="py-1 flex-row items-center">
+                  <MaterialCommunityIcons
+                    accessibilityLabel="Destination Location"
+                    color={colors.primary}
+                    name="map-marker"
+                    size={32}
+                  />
+                  <AppText className="ml-2">
+                    {destinationLocation?.title}
+                  </AppText>
+                </View>
+              </View>
+              <ListItemSeparator />
+              <View className="m-2 mb-1 flex-row justify-between">
+                <AppText className="text-xl">Payment</AppText>
+                <AppText className="mb-2 text-primary font-bold mx-2 text-xl">
+                  {paymentMethod}
+                </AppText>
+                <AppText className="text-primary font-bold text-xl">
+                  Rs. {ridePriceInput}
+                </AppText>
+              </View>
+              <ListItemSeparator />
+              <View className="py-2">
+                <View className="mb-2 items-center">
+                  <AppText className="text-xl">Rating</AppText>
+                </View>
+                <View className="flex-row justify-center">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <TouchableOpacity
+                      accessibilityRole="button"
+                      accessibilityLabel={`Rate ${i} star${i > 1 ? "s" : ""}`}
+                      accessibilityState={{
+                        selected: i === rate,
+                      }}
+                      key={i}
+                      onPress={() => {
+                        setRate(i);
+                      }}
+                      className="px-2"
+                    >
+                      <MaterialCommunityIcons
+                        key={i}
+                        name={i <= rate ? "star" : "star-outline"}
+                        size={32}
+                        color={colors.primary}
+                      />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+              <TextArea
+                value={rideCompleteComment}
+                onFocus={() => bottomSheetRef.current?.snapToPosition(1200)}
+                onBlur={() => bottomSheetRef.current?.snapToIndex(0)}
+                onChangeText={(text) => setRideCompleteComment(text)}
+              />
+              <AppButton
+                textColor="text-white"
+                title="Submit"
+                color="bg-primary"
+                onPress={() => {
+                  setArtificalLoading(true);
+                  setTimeout(() => {
+                    Alert.alert(
+                      "Thank you for using our service",
+                      "Your feedback is greatly appreciated"
+                    );
+                    resetInputs();
+                    setButtomSheetState(ButtomSheetState.LOCATION_PICKER);
+                    setArtificalLoading(false);
+                  }, 500);
+                }}
+              />
+            </ScrollView>
           )}
         </BottomSheet>
         {buttomSheetState === ButtomSheetState.PAYMENT_METHOD ? (
