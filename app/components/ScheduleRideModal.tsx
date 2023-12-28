@@ -125,6 +125,8 @@ export default function ScheduleRideScreen({
           <View className="m-3 flex-row justify-center rounded-xl bg-light p-2">
             {Object.values(ScheduleServiceType).map((type) => (
               <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityState={{ selected: serviceType === type }}
                 key={type}
                 onPress={() => {
                   setServiceType(type);
@@ -149,6 +151,11 @@ export default function ScheduleRideScreen({
             ))}
           </View>
           <TouchableOpacity
+            aria-label="Pickup Location"
+            accessibilityValue={{
+              text: pickupLocation?.title || "Not set",
+            }}
+            accessibilityRole="button"
             onPress={() => {
               setPickupLocationModelVisible(true);
             }}
@@ -163,6 +170,11 @@ export default function ScheduleRideScreen({
             />
           </TouchableOpacity>
           <TouchableOpacity
+            aria-label="Destination Location"
+            accessibilityValue={{
+              text: destinationLocation?.title || "Not set",
+            }}
+            accessibilityRole="button"
             onPress={() => {
               setDestinationLocationModelVisible(true);
             }}

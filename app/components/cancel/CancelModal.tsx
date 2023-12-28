@@ -5,6 +5,7 @@ import TextArea from "./TextArea";
 import AppButton from "../AppButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import colors from "../../config/colors";
+import { ListItemSeparator } from "../lists";
 
 export enum ButtomSheetState {
   LOCATION_PICKER = "LOCATION_PICKER",
@@ -85,18 +86,22 @@ export default function CancelModal({
         setModalOpen(!modalOpen);
       }}
     >
-      <KeyboardAwareScrollView className="px-5 pt-10 bg-white h-full">
-        <View className="py-2 items-start">
-          <Button
-            title="Cancel"
-            color={colors.primary}
-            onPress={() => setModalOpen(!modalOpen)}
-          />
-        </View>
-        <View>
+      <View className="py-2 px-5 pt-11 items-start">
+        <Button
+          aria-label="Cancel Popup"
+          title="Cancel"
+          color={colors.primary}
+          onPress={() => setModalOpen(!modalOpen)}
+        />
+      </View>
+      <ListItemSeparator />
+      <KeyboardAwareScrollView className="px-5 py-2 bg-white h-full">
+        <View className="pb-10">
           <View>
             {cancelContent.map((item) => (
               <TouchableOpacity
+                accessibilityRole="checkbox"
+                accessibilityState={{ selected: item.id === selectedItem }}
                 key={item.id}
                 activeOpacity={0.7}
                 onPress={() => handleCheckboxChange(item.id)}

@@ -184,6 +184,8 @@ function TextArea({ send }: { send: (data: { message: string }) => void }) {
         />
       </View>
       <TouchableOpacity
+        accessibilityRole="button"
+        aria-label="Send Message"
         disabled={!message}
         onPress={() => {
           send({

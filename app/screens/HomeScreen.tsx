@@ -290,6 +290,8 @@ export default function HomeScreen({
               <View className="m-3 flex-row justify-center rounded-xl bg-light p-2">
                 {Object.values(ServiceType).map((type) => (
                   <TouchableOpacity
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: serviceType === type }}
                     key={type}
                     onPress={() => {
                       setServiceType(type);
@@ -315,6 +317,11 @@ export default function HomeScreen({
               </View>
               <View className="px-5">
                 <TouchableOpacity
+                  aria-label="Pickup Location"
+                  accessibilityValue={{
+                    text: pickupLocation?.title || "Not set",
+                  }}
+                  accessibilityRole="button"
                   onPress={() => {
                     setPickupLocationModelVisible(true);
                   }}
@@ -329,6 +336,11 @@ export default function HomeScreen({
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
+                  aria-label="Destination Location"
+                  accessibilityValue={{
+                    text: destinationLocation?.title || "Not set",
+                  }}
+                  accessibilityRole="button"
                   onPress={() => {
                     setDestinationLocationModelVisible(true);
                   }}
@@ -399,6 +411,7 @@ export default function HomeScreen({
               </View>
               <View className="flex-row gap-2">
                 <AppButton
+                  value={noteInput ? "Added" : "Not Set"}
                   className="flex-1"
                   title={`Note ${noteInput ? "✓" : ""}`}
                   onPress={() => {
@@ -406,6 +419,7 @@ export default function HomeScreen({
                   }}
                 />
                 <AppButton
+                  value={promoInput ? "Added" : "Not Set"}
                   className="flex-1"
                   title={`Promo ${promoInput ? "✓" : ""}`}
                   onPress={() => {
@@ -431,6 +445,8 @@ export default function HomeScreen({
                 {["Cash" as const, "Khalti" as const, "Business" as const].map(
                   (type) => (
                     <TouchableOpacity
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: paymentMethod === type }}
                       key={type}
                       onPress={() => {
                         setPaymentMethod(type);
@@ -492,7 +508,7 @@ export default function HomeScreen({
                     source={require("../assets/driverAvatar.png")}
                     resizeMode="contain"
                   />
-                  <View className="px-3 flex-1">
+                  <View accessible className="px-3 flex-1">
                     <AppText className="text-xl">John Doe</AppText>
                     <View className="flex-row items-center">
                       <MaterialCommunityIcons
@@ -510,14 +526,21 @@ export default function HomeScreen({
                         name="star"
                         size={16}
                       />
-                      <AppText className="ml-1 text-mediumGray">4.5</AppText>
+                      <AppText className="ml-1 text-mediumGray">
+                        4.5 rating
+                      </AppText>
                     </View>
                   </View>
-                  <Image
-                    source={imageMap[serviceType]}
-                    className="w-20 h-10"
-                    resizeMode="contain"
-                  />
+                  <View accessible className="items-center justify-center">
+                    <Image
+                      source={imageMap[serviceType]}
+                      className="w-20 h-10"
+                      resizeMode="contain"
+                    />
+                    <AppText className="mt-1">
+                      {toTitleCase(serviceType)}
+                    </AppText>
+                  </View>
                 </View>
               </View>
               <ListItemSeparator />
@@ -563,6 +586,8 @@ export default function HomeScreen({
                   }}
                 />
                 <TouchableOpacity
+                  accessibilityRole="button"
+                  aria-label="Call Driver"
                   onPress={() => {
                     Linking.openURL(
                       `tel:${Math.floor(Math.random() * 10000000000)}`
@@ -577,6 +602,8 @@ export default function HomeScreen({
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
+                  accessibilityRole="button"
+                  aria-label="Chat with Driver"
                   onPress={() => {
                     navigate(routes.CHAT, {});
                   }}
