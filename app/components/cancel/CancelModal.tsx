@@ -16,6 +16,12 @@ export enum ButtomSheetState {
   RIDE_COMPLETED = "RIDE_COMPLETED",
 }
 
+export enum RiderButtomSheetState {
+  PASSENGER_REQUEST_LIST = "PASSENGER_REQUEST_LIST",
+  RIDE_SELECTED = "RIDE_SELECTED",
+  RIDE_ONGOING = "RIDE_ONGOING",
+}
+
 const cancelContent = [
   {
     id: 1,

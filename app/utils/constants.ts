@@ -6,6 +6,14 @@ export type Place = {
   longitude: number;
 };
 
+export type Passenger = {
+  passengerName: string;
+  pickupLocation: Place | null;
+  destinationLocation: Place | null;
+  distance: string;
+  price: number;
+};
+
 export type Promo = {
   color: string;
   code: string;
@@ -137,6 +145,37 @@ export const places: Place[] = [
     city: "Charkhal Rd, Kathmandu",
     latitude: 27.7074128,
     longitude: 85.3273696,
+  },
+];
+
+export const passengers: Passenger[] = [
+  {
+    passengerName: "Joon Shakya",
+    pickupLocation: places.find((place) => place.id === 11) || null,
+    destinationLocation: places.find((place) => place.id === 1) || null,
+    distance: "11.4 km",
+    price: 200,
+  },
+  {
+    passengerName: "Leah Deshar",
+    pickupLocation: places.find((place) => place.id === 2) || null,
+    destinationLocation: places.find((place) => place.id === 3) || null,
+    distance: "12.3 km",
+    price: 120,
+  },
+  {
+    passengerName: "Yush Pokhrel",
+    pickupLocation: places.find((place) => place.id === 4) || null,
+    destinationLocation: places.find((place) => place.id === 5) || null,
+    distance: "13.4 km",
+    price: 150,
+  },
+  {
+    passengerName: "Purna Shrestha",
+    pickupLocation: places.find((place) => place.id === 6) || null,
+    destinationLocation: places.find((place) => place.id === 7) || null,
+    distance: "4.4 km",
+    price: 250,
   },
 ];
 

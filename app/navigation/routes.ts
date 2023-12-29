@@ -7,6 +7,7 @@ enum routes {
   OFFERS = "Offers",
   SCHEDULE_RIDE = "ScheduleRide ",
   SOS = "SOS",
+  HOME_OF_RIDER = "HomeOfRider",
 }
 
 export default routes;

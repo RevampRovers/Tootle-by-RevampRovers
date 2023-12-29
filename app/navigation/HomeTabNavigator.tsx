@@ -9,11 +9,14 @@ import colors from "../config/colors";
 import OffersScreen from "../screens/OffersScreen";
 import { Promo } from "../utils/constants";
 import AccountScreen from "../screens/AccountScreen";
+import { useBearStore } from "../store";
+import HomeOfRiderScreen from "../screens/HomeOfRiderScreen";
 
 export type HomeTabNavigatorParamList = {
   [routes.HOME]: {
     promo: Promo | null;
   };
+  [routes.HOME_OF_RIDER]: undefined;
   [routes.ACCOUNT]: undefined;
   [routes.HISTORY]: undefined;
   [routes.OFFERS]: undefined;
@@ -42,6 +45,7 @@ const tabOfferIcon = ({ color, size }: TabIconProps) => (
 
 export default function HomeTabNavigator() {
   const Tab = createBottomTabNavigator<HomeTabNavigatorParamList>();
+  const riderMode = useBearStore((state) => state.riderMode);
 
   return (
     <Tab.Navigator
@@ -51,17 +55,29 @@ export default function HomeTabNavigator() {
         tabBarActiveTintColor: colors.primary,
       }}
     >
-      <Tab.Screen
-        component={HomeScreen}
-        name={routes.HOME}
-        initialParams={{
-          promo: null,
-        }}
-        options={{
-          headerShown: false,
-          tabBarIcon: tabToolsIcon,
-        }}
-      />
+      {riderMode ? (
+        <Tab.Screen
+          component={HomeOfRiderScreen}
+          name={routes.HOME_OF_RIDER}
+          options={{
+            title: "Home",
+            headerShown: false,
+            tabBarIcon: tabToolsIcon,
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          component={HomeScreen}
+          name={routes.HOME}
+          initialParams={{
+            promo: null,
+          }}
+          options={{
+            headerShown: false,
+            tabBarIcon: tabToolsIcon,
+          }}
+        />
+      )}
       <Tab.Screen
         component={HistoryScreen}
         name={routes.HISTORY}

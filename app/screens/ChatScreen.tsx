@@ -20,11 +20,7 @@ import AppTextInput from "../components/AppTextInput";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
 import AppText from "../components/AppText";
-
-const user = {
-  id: "1",
-  fullName: "John Doe",
-};
+import { useBearStore } from "../store";
 
 const initialChatData = {
   messages: [
@@ -65,6 +61,13 @@ export default function ChatScreen({
   navigation: NativeStackNavigationProp<AppNavigatorParamList, routes.CHAT>;
   route: RouteProp<AppNavigatorParamList, routes.CHAT>;
 }) {
+  const riderMode = useBearStore((state) => state.riderMode);
+
+  const user = {
+    id: riderMode ? "2" : "1",
+    fullName: "John Doe",
+  };
+
   const headerHeight = useHeaderHeight();
   const paddingBottom = 36;
 
