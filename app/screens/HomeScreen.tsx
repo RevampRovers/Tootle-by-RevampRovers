@@ -41,6 +41,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LocationPickerModal from "../components/LocationPickerModal";
 import TextArea from "../components/cancel/TextArea";
 import { ScrollView } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 enum ServiceType {
   BIKE = "BIKE",
@@ -109,7 +110,7 @@ export default function HomeScreen({
         : buttomSheetState === ButtomSheetState.PAYMENT_METHOD
         ? [406]
         : buttomSheetState === ButtomSheetState.RIDE_FOUND
-        ? [320]
+        ? [380]
         : buttomSheetState === ButtomSheetState.RIDE_ONGOING
         ? [268]
         : buttomSheetState === ButtomSheetState.RIDE_COMPLETED
@@ -632,6 +633,17 @@ export default function HomeScreen({
                 </View>
               </View>
               <ListItemSeparator />
+              <View className="m-2">
+                <AppText className="text-xl">
+                  {serviceType === ServiceType.CAR ? "Car" : "Bike"} details:
+                </AppText>
+
+                <AppText className="font-bold text-xl">
+                  {serviceType === ServiceType.CAR ? "SUZUKI" : "YAMAHA FZ-S"}-
+                  Ba. 1 Pa. 1234
+                </AppText>
+              </View>
+              <ListItemSeparator />
               <View className="m-2 mb-1 flex-row justify-between">
                 <AppText className="text-xl">Payment Method</AppText>
                 {promoInput ? (
@@ -838,7 +850,7 @@ export default function HomeScreen({
             </View>
           )}
           {buttomSheetState === ButtomSheetState.RIDE_COMPLETED && (
-            <ScrollView
+            <KeyboardAwareScrollView
               keyboardDismissMode="interactive"
               keyboardShouldPersistTaps="handled"
               className="px-5"
@@ -855,16 +867,6 @@ export default function HomeScreen({
                   />
                   <View accessible className="px-3 flex-1">
                     <AppText className="text-xl">John Doe</AppText>
-                    <View className="flex-row items-center">
-                      <MaterialCommunityIcons
-                        color={colors.primary}
-                        name="map-marker"
-                        size={16}
-                      />
-                      <AppText className="ml-1 text-mediumGray">
-                        800m (5 mins away)
-                      </AppText>
-                    </View>
                     <View className="flex-row items-center">
                       <MaterialIcons
                         color={colors.yellow}
@@ -973,7 +975,7 @@ export default function HomeScreen({
                   }, 500);
                 }}
               />
-            </ScrollView>
+            </KeyboardAwareScrollView>
           )}
         </BottomSheet>
         {buttomSheetState === ButtomSheetState.PAYMENT_METHOD ? (

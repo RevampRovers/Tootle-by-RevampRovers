@@ -8,7 +8,7 @@ const colors = {
   lightGray2: "#d4d4d4",
   mediumGray: "#888889",
   primary: "#ed4297",
-  red: "#fc5c65",
+  red: "#c93a3a",
   secondary: "#4ecdc4",
   white: "#fff",
   iosBackground: "#f2f2f6",
