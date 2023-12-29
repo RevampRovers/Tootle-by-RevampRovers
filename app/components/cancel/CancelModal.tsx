@@ -11,12 +11,13 @@ import Constants from "expo-constants";
 export enum ButtomSheetState {
   LOCATION_PICKER = "LOCATION_PICKER",
   PAYMENT_METHOD = "PAYMENT_METHOD",
+  RIDERS_LIST = "RIDERS_LIST",
   RIDE_FOUND = "RIDE_FOUND",
   RIDE_ONGOING = "RIDE_ONGOING",
   RIDE_COMPLETED = "RIDE_COMPLETED",
 }
 
-export enum RiderButtomSheetState {
+export enum RiderBottomSheetState {
   PASSENGER_REQUEST_LIST = "PASSENGER_REQUEST_LIST",
   RIDE_SELECTED = "RIDE_SELECTED",
   RIDE_ONGOING = "RIDE_ONGOING",
