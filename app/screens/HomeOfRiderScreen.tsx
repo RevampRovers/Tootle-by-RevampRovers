@@ -369,7 +369,7 @@ export default function HomeOfRiderScreen({
                 </TouchableOpacity>
                 <TouchableOpacity
                   accessibilityRole="button"
-                  aria-label="Messagee"
+                  aria-label="Messages"
                   onPress={() => {
                     navigate(routes.CHAT, {});
                   }}
@@ -382,7 +382,7 @@ export default function HomeOfRiderScreen({
                       size={24}
                     />
                   </View>
-                  <AppText className="text-center mt-2">Messagee</AppText>
+                  <AppText className="text-center mt-2">Messages</AppText>
                 </TouchableOpacity>
                 <TouchableOpacity
                   accessibilityRole="button"
