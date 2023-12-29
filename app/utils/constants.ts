@@ -161,21 +161,21 @@ export const passengers: Passenger[] = [
     pickupLocation: places.find((place) => place.id === 2) || null,
     destinationLocation: places.find((place) => place.id === 3) || null,
     distance: "12.3 km",
-    price: 120,
+    price: 240,
   },
   {
-    passengerName: "Yush Pokhrel",
+    passengerName: "Yush Pokharel",
     pickupLocation: places.find((place) => place.id === 4) || null,
     destinationLocation: places.find((place) => place.id === 5) || null,
     distance: "13.4 km",
-    price: 150,
+    price: 250,
   },
   {
     passengerName: "Purna Shrestha",
     pickupLocation: places.find((place) => place.id === 6) || null,
     destinationLocation: places.find((place) => place.id === 7) || null,
     distance: "4.4 km",
-    price: 250,
+    price: 100,
   },
 ];
 
