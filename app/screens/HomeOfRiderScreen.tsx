@@ -25,7 +25,7 @@ import { navigate } from "../navigation/routeNavigation";
 import routes from "../navigation/routes";
 import useDebounce from "../utils/useDebounce";
 import CancelModal, {
-  RiderButtomSheetState,
+  RiderBottomSheetState,
 } from "../components/cancel/CancelModal";
 import {
   Passenger,
@@ -59,21 +59,21 @@ export default function HomeOfRiderScreen({
   );
 
   const [buttomSheetState, setRiderButtomSheetState] =
-    useState<RiderButtomSheetState>(
-      RiderButtomSheetState.PASSENGER_REQUEST_LIST
+    useState<RiderBottomSheetState>(
+      RiderBottomSheetState.PASSENGER_REQUEST_LIST
     );
 
   const snapPoints = useMemo(
     () =>
-      buttomSheetState === RiderButtomSheetState.PASSENGER_REQUEST_LIST
+      buttomSheetState === RiderBottomSheetState.PASSENGER_REQUEST_LIST
         ? [
-            26 + 212 * passengerListLength < 700
-              ? 36 + 212 * passengerListLength
+            26 + 272 * passengerListLength < 700
+              ? 26 + 272 * passengerListLength
               : 700,
           ]
-        : buttomSheetState === RiderButtomSheetState.RIDE_SELECTED
+        : buttomSheetState === RiderBottomSheetState.RIDE_SELECTED
         ? [406]
-        : buttomSheetState === RiderButtomSheetState.RIDE_ONGOING
+        : buttomSheetState === RiderBottomSheetState.RIDE_ONGOING
         ? [330]
         : [0],
     [buttomSheetState, passengerListLength]
@@ -82,7 +82,7 @@ export default function HomeOfRiderScreen({
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
-    if (buttomSheetState === RiderButtomSheetState.PASSENGER_REQUEST_LIST) {
+    if (buttomSheetState === RiderBottomSheetState.PASSENGER_REQUEST_LIST) {
       setPassengerListLength(1);
       interval = setInterval(() => {
         setPassengerListLength((prev) =>
@@ -90,6 +90,12 @@ export default function HomeOfRiderScreen({
         );
       }, 3000);
     }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [buttomSheetState]);
 
   useDebounce(
@@ -249,76 +255,21 @@ export default function HomeOfRiderScreen({
         >
           <ActivityIndicator visible={artificalLoading} />
           {buttomSheetState ===
-            RiderButtomSheetState.PASSENGER_REQUEST_LIST && (
+            RiderBottomSheetState.PASSENGER_REQUEST_LIST && (
             <ScrollView>
               {passengers.slice(0, passengerListLength).map((item, index) => (
-                <View key={item.passengerName}>
-                  {index !== 0 && (
-                    <View className="py-1">
-                      <ListItemSeparator />
-                    </View>
-                  )}
-                  <View className="mx-5">
-                    <AppText className="py-1 text-primary text-2xl font-bold">
-                      {item.passengerName}
-                    </AppText>
-                    <View accessible className="pt-1">
-                      <View className="pb-1 flex-row items-center">
-                        <MaterialIcons
-                          accessibilityLabel="Pickup Location"
-                          color={colors.primary}
-                          name="my-location"
-                          size={32}
-                        />
-                        <AppText className="ml-2">
-                          {item.pickupLocation?.title}
-                        </AppText>
-                      </View>
-                      <View className="pb-1 flex-row items-center">
-                        <MaterialCommunityIcons
-                          accessibilityLabel="Destination Location"
-                          color={colors.primary}
-                          name="map-marker"
-                          size={32}
-                        />
-                        <AppText className="ml-2">
-                          {item.destinationLocation?.title}
-                        </AppText>
-                      </View>
-                    </View>
-                    <View className="flex-row justify-between items-center">
-                      {[item.distance, "Cash Payment", `Rs. ${item.price}`].map(
-                        (text) => (
-                          <AppText
-                            key={text}
-                            className="text-primary text-lg font-bold"
-                          >
-                            {text}
-                          </AppText>
-                        )
-                      )}
-                    </View>
-                    <AppButton
-                      color="bg-[#7bba89]"
-                      textColor="text-white"
-                      title="Accept"
-                      onPress={() => {
-                        setArtificalLoading(true);
-                        setTimeout(() => {
-                          setSelectedPassenger(item);
-                          setArtificalLoading(false);
-                          setRiderButtomSheetState(
-                            RiderButtomSheetState.RIDE_SELECTED
-                          );
-                        }, 500);
-                      }}
-                    />
-                  </View>
-                </View>
+                <PassengerCard
+                  key={item.passengerName}
+                  item={item}
+                  index={index}
+                  setArtificalLoading={setArtificalLoading}
+                  setSelectedPassenger={setSelectedPassenger}
+                  setRiderButtomSheetState={setRiderButtomSheetState}
+                />
               ))}
             </ScrollView>
           )}
-          {buttomSheetState === RiderButtomSheetState.RIDE_SELECTED && (
+          {buttomSheetState === RiderBottomSheetState.RIDE_SELECTED && (
             <View className="px-5">
               <View className="mb-2 flex-row justify-center">
                 <AppText className="text-xl">Picking Up</AppText>
@@ -380,7 +331,7 @@ export default function HomeOfRiderScreen({
                             setTimeout(() => {
                               setArtificalLoading(false);
                               setRiderButtomSheetState(
-                                RiderButtomSheetState.PASSENGER_REQUEST_LIST
+                                RiderBottomSheetState.PASSENGER_REQUEST_LIST
                               );
                             }, 500);
                           },
@@ -481,14 +432,14 @@ export default function HomeOfRiderScreen({
                   setTimeout(() => {
                     setArtificalLoading(false);
                     setRiderButtomSheetState(
-                      RiderButtomSheetState.RIDE_ONGOING
+                      RiderBottomSheetState.RIDE_ONGOING
                     );
                   }, 500);
                 }}
               />
             </View>
           )}
-          {buttomSheetState === RiderButtomSheetState.RIDE_ONGOING && (
+          {buttomSheetState === RiderBottomSheetState.RIDE_ONGOING && (
             <View className="px-5">
               <View className="mb-2 flex-row justify-center">
                 <AppText className="text-xl">Ride Ongoing</AppText>
@@ -578,7 +529,7 @@ export default function HomeOfRiderScreen({
                   setTimeout(() => {
                     setArtificalLoading(false);
                     setRiderButtomSheetState(
-                      RiderButtomSheetState.PASSENGER_REQUEST_LIST
+                      RiderBottomSheetState.PASSENGER_REQUEST_LIST
                     );
                   }, 500);
                 }}
@@ -588,5 +539,105 @@ export default function HomeOfRiderScreen({
         </BottomSheet>
       </View>
     </Screen>
+  );
+}
+
+function PassengerCard({
+  item,
+  index,
+  setArtificalLoading,
+  setSelectedPassenger,
+  setRiderButtomSheetState,
+}: {
+  item: Passenger;
+  index: number;
+  setArtificalLoading: (value: boolean) => void;
+  setSelectedPassenger: (value: Passenger | null) => void;
+  setRiderButtomSheetState: (value: RiderBottomSheetState) => void;
+}) {
+  const [currentPrice, setPaymentMethod] = useState<
+    "Rs. 200" | "Rs. 220" | "Rs. 240"
+  >("Rs. 200");
+  return (
+    <View key={item.passengerName}>
+      {index !== 0 && (
+        <View className="py-1">
+          <ListItemSeparator />
+        </View>
+      )}
+      <View className="mx-5">
+        <AppText className="py-1 text-primary text-2xl font-bold">
+          {item.passengerName}
+        </AppText>
+        <View accessible className="pt-1">
+          <View className="pb-1 flex-row items-center">
+            <MaterialIcons
+              accessibilityLabel="Pickup Location"
+              color={colors.primary}
+              name="my-location"
+              size={32}
+            />
+            <AppText className="ml-2">{item.pickupLocation?.title}</AppText>
+          </View>
+          <View className="pb-1 flex-row items-center">
+            <MaterialCommunityIcons
+              accessibilityLabel="Destination Location"
+              color={colors.primary}
+              name="map-marker"
+              size={32}
+            />
+            <AppText className="ml-2">
+              {item.destinationLocation?.title}
+            </AppText>
+          </View>
+        </View>
+        <View className="flex-row justify-between items-center">
+          {[item.distance, "Cash Payment", `Rs. ${item.price}`].map((text) => (
+            <AppText key={text} className="text-primary text-lg font-bold">
+              {text}
+            </AppText>
+          ))}
+        </View>
+
+        <View className="mt-2 flex-row justify-center rounded-xl bg-light p-2">
+          {["Rs. 200" as const, "Rs. 220" as const, "Rs. 240" as const].map(
+            (price) => (
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityState={{ selected: currentPrice === price }}
+                key={price}
+                onPress={() => {
+                  setPaymentMethod(price);
+                }}
+                className={`${
+                  currentPrice === price ? "bg-primary" : ""
+                } rounded-lg p-2 px-4 flex-1 items-center justify-center`}
+              >
+                <AppText
+                  className={`${
+                    currentPrice === price ? "text-white" : ""
+                  } rounded-lg`}
+                >
+                  {price}
+                </AppText>
+              </TouchableOpacity>
+            )
+          )}
+        </View>
+        <AppButton
+          color="bg-[#7bba89]"
+          textColor="text-white"
+          title="Accept"
+          onPress={() => {
+            setArtificalLoading(true);
+            setTimeout(() => {
+              setSelectedPassenger(item);
+              setArtificalLoading(false);
+              setRiderButtomSheetState(RiderBottomSheetState.RIDE_SELECTED);
+            }, 500);
+          }}
+        />
+      </View>
+    </View>
   );
 }

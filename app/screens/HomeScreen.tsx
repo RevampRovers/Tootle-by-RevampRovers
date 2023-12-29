@@ -31,7 +31,7 @@ import { navigate } from "../navigation/routeNavigation";
 import routes from "../navigation/routes";
 import useDebounce from "../utils/useDebounce";
 import CancelModal, {
-  ButtomSheetState,
+  ButtomSheetState as BottomSheetState,
 } from "../components/cancel/CancelModal";
 import { Place, leapfrogToSxcRoute, offers, places } from "../utils/constants";
 import { RouteProp } from "@react-navigation/native";
@@ -70,6 +70,7 @@ export default function HomeScreen({
   const mapRef = useRef<MapView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const bottomSheetTextInputRef = useRef<BottomSheet>(null);
+  const [ridersLength, setRidersLength] = useState<number>(1);
   const [dragValue, setDragValue] = useState<number>(0);
   const [counter, setCounter] = useState<number>(10);
   const [counter2, setCounter2] = useState<number>(10);
@@ -98,38 +99,47 @@ export default function HomeScreen({
     "Cash" | "Khalti" | "Business"
   >("Cash");
   const [rate, setRate] = useState<number>(0);
-  const [buttomSheetState, setButtomSheetState] = useState<ButtomSheetState>(
-    ButtomSheetState.LOCATION_PICKER
+  const [buttomSheetState, setButtomSheetState] = useState<BottomSheetState>(
+    BottomSheetState.LOCATION_PICKER
   );
   const [rideCompleteComment, setRideCompleteComment] = useState<string>("");
 
   const snapPoints = useMemo(
     () =>
-      buttomSheetState === ButtomSheetState.LOCATION_PICKER
+      buttomSheetState === BottomSheetState.LOCATION_PICKER
         ? [340]
-        : buttomSheetState === ButtomSheetState.PAYMENT_METHOD
+        : buttomSheetState === BottomSheetState.PAYMENT_METHOD
         ? [406]
-        : buttomSheetState === ButtomSheetState.RIDE_FOUND
+        : buttomSheetState === BottomSheetState.RIDERS_LIST
+        ? [26 + 164 * ridersLength < 700 ? 26 + 164 * ridersLength : 700]
+        : buttomSheetState === BottomSheetState.RIDE_FOUND
         ? [380]
-        : buttomSheetState === ButtomSheetState.RIDE_ONGOING
+        : buttomSheetState === BottomSheetState.RIDE_ONGOING
         ? [268]
-        : buttomSheetState === ButtomSheetState.RIDE_COMPLETED
+        : buttomSheetState === BottomSheetState.RIDE_COMPLETED
         ? [640]
         : [0],
-    [buttomSheetState]
+    [buttomSheetState, ridersLength]
   );
   const snapPointsTextInput = [1, 200];
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     let interval2: NodeJS.Timeout | null = null;
-    if (buttomSheetState === ButtomSheetState.RIDE_FOUND) {
-      setCounter(10);
+    let interval3: NodeJS.Timeout | null = null;
+
+    if (buttomSheetState === BottomSheetState.RIDERS_LIST) {
+      setRidersLength(1);
+      interval = setInterval(() => {
+        setRidersLength((prev) => (prev < 5 ? prev + 1 : prev));
+      }, 3000);
+    } else if (buttomSheetState === BottomSheetState.RIDE_FOUND) {
+      setCounter(15);
       interval = setInterval(() => {
         setCounter((prev) => prev - 1);
       }, 1000);
-    } else if (buttomSheetState === ButtomSheetState.RIDE_ONGOING) {
-      setCounter2(10);
+    } else if (buttomSheetState === BottomSheetState.RIDE_ONGOING) {
+      setCounter2(15);
       interval2 = setInterval(() => {
         setCounter2((prev) => prev - 1);
       }, 1000);
@@ -141,6 +151,9 @@ export default function HomeScreen({
       if (interval2) {
         clearInterval(interval2);
       }
+      if (interval3) {
+        clearInterval(interval3);
+      }
     };
   }, [buttomSheetState]);
 
@@ -149,7 +162,7 @@ export default function HomeScreen({
     if (counter === 0) {
       setArtificalLoading(true);
       timeout = setTimeout(() => {
-        setButtomSheetState(ButtomSheetState.RIDE_ONGOING);
+        setButtomSheetState(BottomSheetState.RIDE_ONGOING);
         setArtificalLoading(false);
       }, 500);
     }
@@ -163,7 +176,7 @@ export default function HomeScreen({
     if (counter2 === 0) {
       setArtificalLoading(true);
       timeout = setTimeout(() => {
-        setButtomSheetState(ButtomSheetState.RIDE_COMPLETED);
+        setButtomSheetState(BottomSheetState.RIDE_COMPLETED);
         setArtificalLoading(false);
       }, 500);
     }
@@ -368,7 +381,7 @@ export default function HomeScreen({
           // onChange={handleSheetChanges}
         >
           <ActivityIndicator visible={artificalLoading} />
-          {buttomSheetState === ButtomSheetState.LOCATION_PICKER && (
+          {buttomSheetState === BottomSheetState.LOCATION_PICKER && (
             <>
               <View className="m-3 flex-row justify-center rounded-xl bg-light p-2">
                 {Object.values(ServiceType).map((type) => (
@@ -466,7 +479,7 @@ export default function HomeScreen({
                     }
                     setArtificalLoading(true);
                     setTimeout(() => {
-                      setButtomSheetState(ButtomSheetState.PAYMENT_METHOD);
+                      setButtomSheetState(BottomSheetState.PAYMENT_METHOD);
                       setArtificalLoading(false);
                     }, 500);
                   }}
@@ -474,7 +487,7 @@ export default function HomeScreen({
               </View>
             </>
           )}
-          {buttomSheetState === ButtomSheetState.PAYMENT_METHOD && (
+          {buttomSheetState === BottomSheetState.PAYMENT_METHOD && (
             <View className="px-5">
               <View accessible>
                 <View className="py-1 flex-row items-center">
@@ -529,7 +542,6 @@ export default function HomeScreen({
                   setRidePriceInput(text);
                 }}
               />
-
               <View className="mt-2 flex-row justify-center rounded-xl bg-light p-2">
                 {["Cash" as const, "Khalti" as const, "Business" as const].map(
                   (type) => (
@@ -562,7 +574,7 @@ export default function HomeScreen({
                   onPress={() => {
                     setArtificalLoading(true);
                     setTimeout(() => {
-                      setButtomSheetState(ButtomSheetState.LOCATION_PICKER);
+                      setButtomSheetState(BottomSheetState.LOCATION_PICKER);
                       setArtificalLoading(false);
                     }, 500);
                   }}
@@ -574,7 +586,7 @@ export default function HomeScreen({
                   onPress={() => {
                     setArtificalLoading(true);
                     setTimeout(() => {
-                      setButtomSheetState(ButtomSheetState.RIDE_FOUND);
+                      setButtomSheetState(BottomSheetState.RIDERS_LIST);
                       setArtificalLoading(false);
                     }, 1000);
                   }}
@@ -582,7 +594,72 @@ export default function HomeScreen({
               </View>
             </View>
           )}
-          {buttomSheetState === ButtomSheetState.RIDE_FOUND && (
+
+          {buttomSheetState === BottomSheetState.RIDERS_LIST && (
+            <ScrollView>
+              {Array(5)
+                .fill(0)
+                .slice(0, ridersLength)
+                .map((_, index) => (
+                  <View key={index}>
+                    {index !== 0 && (
+                      <View className="py-1">
+                        <ListItemSeparator />
+                      </View>
+                    )}
+                    <View className="mx-5">
+                      <View className="my-2 py-1 flex-row justify-between">
+                        <View className="flex-1 flex-row items-center">
+                          <Image
+                            source={require("../assets/driverAvatar.png")}
+                            resizeMode="contain"
+                          />
+                          <View accessible className="px-3 flex-1">
+                            <AppText className="text-xl">John Doe</AppText>
+                            <View className="flex-row items-center">
+                              <MaterialCommunityIcons
+                                color={colors.primary}
+                                name="map-marker"
+                                size={16}
+                              />
+                              <AppText className="ml-1 text-mediumGray">
+                                800m (5 mins away)
+                              </AppText>
+                            </View>
+                            <View className="flex-row items-center">
+                              <MaterialIcons
+                                color={colors.yellow}
+                                name="star"
+                                size={16}
+                              />
+                              <AppText className="ml-1 text-mediumGray">
+                                4.5 rating
+                              </AppText>
+                            </View>
+                          </View>
+                          <AppText className="text-primary font-bold text-xl">
+                            Rs. 200
+                          </AppText>
+                        </View>
+                      </View>
+                      <AppButton
+                        color="bg-[#7bba89]"
+                        textColor="text-white"
+                        title="Accept"
+                        onPress={() => {
+                          setArtificalLoading(true);
+                          setTimeout(() => {
+                            setArtificalLoading(false);
+                            setButtomSheetState(BottomSheetState.RIDE_FOUND);
+                          }, 500);
+                        }}
+                      />
+                    </View>
+                  </View>
+                ))}
+            </ScrollView>
+          )}
+          {buttomSheetState === BottomSheetState.RIDE_FOUND && (
             <View className="px-5">
               <View className="mb-2 flex-row justify-between">
                 <AppText className="text-xl">Driver is on the way</AppText>
@@ -679,28 +756,6 @@ export default function HomeScreen({
                   className="flex-1 bg-[#c93a3a]"
                   onPress={() => {
                     setCancelModalOpen(true);
-                    // Alert.alert(
-                    //   "Cancel Ride",
-                    //   "Are you sure you want to cancel the ride?",
-                    //   [
-                    //     {
-                    //       text: "No",
-                    //       onPress: () => {},
-                    //     },
-                    //     {
-                    //       text: "Yes",
-                    //       onPress: () => {
-                    //         setArtificalLoading(true);
-                    //         setTimeout(() => {
-                    //           setButtomSheetState(
-                    //             ButtomSheetState.LOCATION_PICKER
-                    //           );
-                    //           setArtificalLoading(false);
-                    //         }, 500);
-                    //       },
-                    //     },
-                    //   ]
-                    // );
                   }}
                 />
                 <TouchableOpacity
@@ -736,7 +791,7 @@ export default function HomeScreen({
               </View>
             </View>
           )}
-          {buttomSheetState === ButtomSheetState.RIDE_ONGOING && (
+          {buttomSheetState === BottomSheetState.RIDE_ONGOING && (
             <View className="px-5">
               <View className="mb-2 flex-row justify-center">
                 <AppText className="text-xl">Ride Ongoing</AppText>
@@ -849,7 +904,7 @@ export default function HomeScreen({
               </View>
             </View>
           )}
-          {buttomSheetState === ButtomSheetState.RIDE_COMPLETED && (
+          {buttomSheetState === BottomSheetState.RIDE_COMPLETED && (
             <KeyboardAwareScrollView
               keyboardDismissMode="interactive"
               keyboardShouldPersistTaps="handled"
@@ -970,7 +1025,7 @@ export default function HomeScreen({
                       "Your feedback is greatly appreciated"
                     );
                     resetInputs();
-                    setButtomSheetState(ButtomSheetState.LOCATION_PICKER);
+                    setButtomSheetState(BottomSheetState.LOCATION_PICKER);
                     setArtificalLoading(false);
                   }, 500);
                 }}
@@ -978,7 +1033,7 @@ export default function HomeScreen({
             </KeyboardAwareScrollView>
           )}
         </BottomSheet>
-        {buttomSheetState === ButtomSheetState.PAYMENT_METHOD ? (
+        {buttomSheetState === BottomSheetState.PAYMENT_METHOD ? (
           <BottomSheet
             ref={bottomSheetTextInputRef}
             index={0}
