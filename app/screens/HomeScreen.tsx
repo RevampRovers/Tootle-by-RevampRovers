@@ -111,7 +111,7 @@ export default function HomeScreen({
         : buttomSheetState === BottomSheetState.PAYMENT_METHOD
         ? [406]
         : buttomSheetState === BottomSheetState.RIDERS_LIST
-        ? [26 + 164 * ridersLength < 700 ? 26 + 164 * ridersLength : 700]
+        ? [26 + 156 * ridersLength < 700 ? 26 + 156 * ridersLength : 700]
         : buttomSheetState === BottomSheetState.RIDE_FOUND
         ? [380]
         : buttomSheetState === BottomSheetState.RIDE_ONGOING
@@ -608,7 +608,7 @@ export default function HomeScreen({
                       </View>
                     )}
                     <View className="mx-5">
-                      <View className="my-2 py-1 flex-row justify-between">
+                      <View className="mt-2 py-1 flex-row justify-between">
                         <View className="flex-1 flex-row items-center">
                           <Image
                             source={require("../assets/driverAvatar.png")}

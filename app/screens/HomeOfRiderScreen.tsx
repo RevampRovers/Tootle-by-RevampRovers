@@ -287,10 +287,10 @@ export default function HomeOfRiderScreen({
                     </AppText>
                     <View className="flex-row items-center">
                       <View>
-                        <AppText className="ml-1 text-mediumGray">
+                        <AppText className="text-mediumGray">
                           {selectedPassenger?.pickupLocation?.title}
                         </AppText>
-                        <AppText className="ml-1 text-mediumGray">
+                        <AppText className="text-mediumGray">
                           800m (5 mins away)
                         </AppText>
                       </View>
